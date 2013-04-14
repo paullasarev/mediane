@@ -136,10 +136,22 @@ footer {
 }
 
 .site-title a, .site-title a:hover, .site-title a:active {
-    background: none;
+    /*background: none;*/
     color: #c8c8c8;
     outline: none;
     text-decoration: none;
+    vertical-align:middle;
+}
+
+a.logo {
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    font-weight: bold;
+    background: url("../Images/mediane_logo.png") no-repeat top center; 
+    display: block;
+    height: 64px; 
+    width: 64px;
+    text-indent: 80px;
+    line-height: 54px;
 }
 
 
