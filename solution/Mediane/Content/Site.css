@@ -109,7 +109,8 @@ h5, h6 {
 }
 
     .main-content {
-        background: url("../Images/accent.png") no-repeat;
+        /*background: url("../Images/accent.png") no-repeat;*/
+        background:#efefef;
         padding-left: 10px;
         padding-top: 30px;
     }
@@ -614,6 +615,91 @@ td {
 tr.pager td {
     padding: 0 0.25em 0 0;
 }
+
+/* tabs */
+
+#globalnav {
+	position:relative;
+	float:left;
+	width:100%;
+	padding:0 0 0 0em;
+	margin:0;
+	list-style:none;
+	line-height:1em;
+    background:#fff;
+}
+
+#globalnav LI {
+	float:left;
+	margin:0;
+	padding:0;
+}
+
+#globalnav A {
+border-top-left-radius:10px;
+border-top-right-radius:10px;
+	display:block;
+	color:#444;
+	text-decoration:none;
+	font-weight:bold;
+	background:#ccc;
+	margin-right:2px;
+	padding:0.25em 1em;
+	border-left:1px solid #fff;
+	border-top:1px solid #fff;
+	border-right:1px solid #aaa;
+}
+
+#globalnav A:hover,
+#globalnav A:active,
+#globalnav A.here:link,
+#globalnav A.here:visited {
+	background:#efefef;
+}
+
+#globalnav A.here:link,
+#globalnav A.here:visited {
+	position:relative;
+	z-index:102;
+}
+
+/*subnav*/
+/*
+#globalnav UL {
+	position:absolute;
+	left:0;
+	top:1.5em;
+	float:left;
+	background:#bbb;
+	width:100%;
+	margin:0;
+	padding:0.25em 0.25em 0.25em 1em;
+	list-style:none;
+	border-top:1px solid #fff;
+}
+
+#globalnav UL LI {
+	float:left;
+	display:block;
+	margin-top:1px;
+}
+
+#globalnav UL A {
+	background:#bbb;
+	color:#fff;
+	display:inline;
+	margin:0;
+	padding:0 1em;
+	border:0
+}
+
+#globalnav UL A:hover,
+#globalnav UL A:active,
+#globalnav UL A.here:link,
+#globalnav UL A.here:visited {
+	color:#444;
+}
+    */
 
 
 /********************
