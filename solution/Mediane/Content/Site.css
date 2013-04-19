@@ -619,9 +619,10 @@ tr.pager td {
 /* tabs */
 
 #globalnav {
+    display:inline-block;
 	position:relative;
 	float:left;
-	width:100%;
+	/*width:100%;*/
 	padding:0 0 0 0em;
 	margin:0;
 	list-style:none;
@@ -662,6 +663,23 @@ border-top-right-radius:10px;
 	position:relative;
 	z-index:102;
 }
+
+/*toolbar*/
+
+
+.toolbar li {
+    float: right;
+    display: block;
+    line-height:1em;
+	position:relative;
+    background-color:#eee;
+    border:1px solid;
+    border-color:#f3f3f3 #bbb #bbb #f3f3f3;
+    margin:0;
+    padding:.2em;
+    zoom: 1;
+}
+
 
 /*subnav*/
 /*
@@ -709,10 +727,10 @@ border-top-right-radius:10px;
 
     /* header
     ----------------------------------------------------------*/
-    header .float-left,
+    /*header .float-left,
     header .float-right {
         float: none;
-    }
+    }*/
 
     /* logo */
     header .site-title {
