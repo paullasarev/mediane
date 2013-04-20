@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
     <title>@ViewBag.Title - My ASP.NET MVC Application</title>
     <link href="~/favicon.ico?def=asdf1" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
@@ -9,10 +10,10 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <table>
+    <table class="main-layout">
         <colgroup>
-       <col span="1" style="width: 15%;">
-       <col span="1" style="width: 85%;">
+       <col span="1" style="width: 120px;">
+       <!--col span="1" style="width: 85%;"-->
     </colgroup>
         <tr>
             <td>
@@ -23,7 +24,7 @@
             <td>
                 <div class="float-left">
                     <input type="text" value="text to search" class="search">
-                    <button value="search">search</button>
+                    <button value="search" class="search">search</button>
                 </div>
                 <div class="float-right">
                     <section id="login">
@@ -56,7 +57,7 @@
     <footer>
         <div class="content-wrapper">
             <div class="float-center">
-                <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
+                <p>&copy; @DateTime.Now.Year - powered by <a href="https://code.google.com/p/mediane/">Mediane</a> engine</p>
             </div>
         </div>
     </footer>
