@@ -18,7 +18,7 @@
         <tr>
             <td>
                 <p class="site-title center">
-                    @Html.ActionLink("Mediane", "Index", "Home", null, new { @class = "logo" })
+                    @Html.RouteLink("Mediane", "Home", new {Controller="Home", Action="Index", Id = "Main_Page" }, new { @class = "logo" })
                 </p>
             </td>
             <td>
@@ -38,7 +38,7 @@
             <td >
                 <nav>
                     <ul id="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.RouteLink("Home", "Home", new {Controller="Home", Action="Index", Id = "Main_Page" })</li>
                         <li>@Html.ActionLink("About", "About", "Home")</li>
                         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     </ul>

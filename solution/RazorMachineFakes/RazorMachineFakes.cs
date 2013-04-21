@@ -78,6 +78,51 @@ namespace RazorMachineFakes
         }
 
 
+        //
+        // Summary:
+        //     Returns an anchor element (a element) that contains the virtual path of the
+        //     specified action.
+        //
+        // Parameters:
+        //   htmlHelper:
+        //     The HTML helper instance that this method extends.
+        //
+        //   linkText:
+        //     The inner text of the anchor element.
+        //
+        //   routeName:
+        //     The name of the route that is used to return a virtual path.
+        //
+        //   routeValues:
+        //     An object that contains the parameters for a route. The parameters are retrieved
+        //     through reflection by examining the properties of the object. The object
+        //     is typically created by using object initializer syntax.
+        //
+        //   htmlAttributes:
+        //     An object that contains the HTML attributes to set for the element.
+        //
+        // Returns:
+        //     An anchor element (a element).
+        //
+        // Exceptions:
+        //   System.ArgumentException:
+        //     The linkText parameter is null or empty.
+        //
+        public static LiteralString RouteLink(
+            string linkText,
+            string routeName,
+            object routeValues = null,
+            object htmlAttributes = null)
+        {
+            string attrs = "";
+            //if (htmlAttributes != null)
+            //{
+            //}
+
+            var result = "<a href=\"/" + routeName + "/" + routeName + "\"" + attrs + "> " + linkText + "</a>";
+            return new LiteralString(result);
+        }
+
         public static LiteralString Partial(
             string partialViewName,
             Object model = null,

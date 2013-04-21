@@ -15,6 +15,15 @@ namespace Mediane.Tests.Controllers
     [TestClass]
     public class HomeIndexController
     {
+        [TestInitialize]
+        public void SetUp()
+        {
+            Routes = new RouteCollection();
+            RouteConfig.RegisterRoutes(Routes);
+        }
+
+        RouteCollection Routes;
+
         [TestMethod]
         public void IndexShouldMakeContentModel()
         {
@@ -31,28 +40,45 @@ namespace Mediane.Tests.Controllers
         //Install-Package MvcRouteUnitTester
 
         [TestMethod]
-        public void IndexUrlShouldRedirectToMainPage()
+        public void IndexUrlShouldCallMainPage()
         {
-            var routes = new RouteCollection();
-            RouteConfig.RegisterRoutes(routes);
-
-            RouteAssert.HasRoute(routes, "/home/index");
+            RouteAssert.HasRoute(Routes, "/home/index");
             
             var mainPageRoute = new { controller = "Home", action = "Index", id = "Main_Page" };
-            RouteAssert.HasRoute(routes, "/home/index/Main_Page", mainPageRoute);
-            RouteAssert.HasRoute(routes, "/home/index", mainPageRoute);
+            RouteAssert.HasRoute(Routes, "/home/index/Main_Page", mainPageRoute);
+
+            var pageRoute = new { controller = "Home", action = "Index", id = "Other_Page" };
+            RouteAssert.HasRoute(Routes, "/home/index/Other_Page", pageRoute);
         }
 
         [TestMethod]
-        public void WrongUrlShouldNoRoutes()
+        public void EmptyUrShouldRedirectToMainPage()
         {
-            var routes = new RouteCollection();
-            RouteConfig.RegisterRoutes(routes);
-
-            RouteAssert.NoRoute(routes, "/home/index/asf/asdf");
-            RouteAssert.NoRoute(routes, "/home/indexa");
-            RouteAssert.NoRoute(routes, "/home1/index");
+            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect"};
+            RouteAssert.HasRoute(Routes, "/", mainPageRoute);
         }
+
+        [TestMethod]
+        public void WrongHomeActionShouldRedirectToMainPage()
+        {
+            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };
+            RouteAssert.HasRoute(Routes, "/Home/asdf", mainPageRoute);
+        }
+
+        [TestMethod]
+        public void WrongControllerShouldRedirectToMainPage()
+        {
+            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };
+            RouteAssert.HasRoute(Routes, "/Hom", mainPageRoute);
+        }
+
+        //[TestMethod]
+        //public void WrongUrlShouldNoRoutes()
+        //{
+        //    RouteAssert.NoRoute(Routes, "/home/index/asf/asdf");
+        //    RouteAssert.NoRoute(Routes, "/home/indexa");
+        //    RouteAssert.NoRoute(Routes, "/home1/index");
+        //}
     }
 
 
@@ -60,28 +86,34 @@ namespace Mediane.Tests.Controllers
     public class HomeControllerTest
     {
         [TestMethod]
+        public void RootRedirectShouldRedirectToHomeIndex()
+        {
+            var controller = new RootRedirectorController();
+
+            var result = controller.Redirect() as RedirectToRouteResult;
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Permanent);
+            Assert.AreEqual("Home", result.RouteName);
+        }
+
+        [TestMethod]
         public void About()
         {
-            // Arrange
             HomeController controller = new HomeController();
 
-            // Act
             ViewResult result = controller.About() as ViewResult;
 
-            // Assert
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
         public void Contact()
         {
-            // Arrange
             HomeController controller = new HomeController();
 
-            // Act
             ViewResult result = controller.Contact() as ViewResult;
 
-            // Assert
             Assert.IsNotNull(result);
         }
     }
