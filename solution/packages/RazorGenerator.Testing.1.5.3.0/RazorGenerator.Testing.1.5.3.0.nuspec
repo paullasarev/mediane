@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>RazorGenerator.Testing</id>
+    <version>1.5.3.0</version>
+    <authors>RazorGenerator contributors</authors>
+    <owners>RazorGenerator contributors</owners>
+    <licenseUrl>http://razorgenerator.codeplex.com/license</licenseUrl>
+    <projectUrl>http://razorgenerator.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Helpers to allow unit testing precompiled Razor views</description>
+    <tags>mvc razor testing</tags>
+    <dependencies>
+      <dependency id="HtmlAgilityPack" version="1.4.6" />
+      <dependency id="Moq" version="4.0.10827" />
+      <dependency id="ReflectionMagic" version="1.0.1" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Web" targetFramework=".NETFramework4.0" />
+      <frameworkAssembly assemblyName="System.Web.Mvc" targetFramework=".NETFramework4.0" />
+      <frameworkAssembly assemblyName="System.Web.WebPages" targetFramework=".NETFramework4.0" />
+    </frameworkAssemblies>
+    <references>
+      <reference file="RazorGenerator.Testing.dll" />
+    </references>
+  </metadata>
+</package>

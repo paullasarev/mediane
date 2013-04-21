@@ -14,9 +14,16 @@ namespace Mediane
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                name: "Home",
+                url: "Home/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = "Main_Page" },
+                constraints: new { controller = "Home", action =  "Index|About|Contact" }
+            );
+
+            routes.MapRoute(
+                name: "Account",
+                url: "Account/{action}/{id}",
+                defaults: new { controller = "Account", action = "LogOn", id = "" }
             );
         }
     }

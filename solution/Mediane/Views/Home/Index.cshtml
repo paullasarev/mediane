@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Mediane.Models.ContentModel
+@{
     ViewBag.Title = "Home Page";
 }
 @section viewtabs {
@@ -26,4 +27,4 @@
 
 <h3>@ViewBag.Title</h3>
 
-@ViewBag.Message
+@Model.Rendered

@@ -6,25 +6,59 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mediane;
 using Mediane.Controllers;
+using Mediane.Models;
+using MvcRouteTester;
+using System.Web.Routing;
 
 namespace Mediane.Tests.Controllers
 {
     [TestClass]
-    public class HomeControllerTest
+    public class HomeIndexController
     {
         [TestMethod]
-        public void Index()
+        public void IndexShouldMakeContentModel()
         {
-            // Arrange
             HomeController controller = new HomeController();
 
-            // Act
             ViewResult result = controller.Index() as ViewResult;
 
-            // Assert
-            Assert.AreEqual("Modify this template to jump-start your ASP.NET MVC application.", result.ViewBag.Message);
+            ContentModel model = result.Model as ContentModel;
+            Assert.IsNotNull(model);
+
+            Assert.AreEqual("New page template", model.Rendered);
         }
 
+        //Install-Package MvcRouteUnitTester
+
+        [TestMethod]
+        public void IndexUrlShouldRedirectToMainPage()
+        {
+            var routes = new RouteCollection();
+            RouteConfig.RegisterRoutes(routes);
+
+            RouteAssert.HasRoute(routes, "/home/index");
+            
+            var mainPageRoute = new { controller = "Home", action = "Index", id = "Main_Page" };
+            RouteAssert.HasRoute(routes, "/home/index/Main_Page", mainPageRoute);
+            RouteAssert.HasRoute(routes, "/home/index", mainPageRoute);
+        }
+
+        [TestMethod]
+        public void WrongUrlShouldNoRoutes()
+        {
+            var routes = new RouteCollection();
+            RouteConfig.RegisterRoutes(routes);
+
+            RouteAssert.NoRoute(routes, "/home/index/asf/asdf");
+            RouteAssert.NoRoute(routes, "/home/indexa");
+            RouteAssert.NoRoute(routes, "/home1/index");
+        }
+    }
+
+
+    [TestClass]
+    public class HomeControllerTest
+    {
         [TestMethod]
         public void About()
         {

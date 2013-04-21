@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mediane.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,10 +11,16 @@ namespace Mediane.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+            var model = new ContentModel();
+            model.Rendered = "New page template";
 
-            return View();
+            return View(model);
         }
+
+        //public ActionResult Index(ContentModel model)
+        //{
+        //    return View("Index", model);
+        //}
 
         public ActionResult About()
         {
@@ -28,5 +35,6 @@ namespace Mediane.Controllers
 
             return View();
         }
+
     }
 }
