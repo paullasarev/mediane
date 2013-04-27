@@ -1,0 +1,32 @@
+﻿@model Mediane.Models.ContentModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section viewtabs {
+    <div class="nav">
+        <ul class="tabs">
+            <li><a href="#" class="here">Document</a></li>
+            <li><a href="#">Comment</a></li>
+            <li><a href="#">Property</a></li>
+            <li><a href="#">Attach</a></li>
+        </ul>
+
+        <ul class="toolbox">
+            <li><a onclick="$('#ContentEdit').submit();">Save</a></li>
+            @*<li>@Html.ActionLink("Save", "Save", "Home", new { id = Model.Id }, new { onclick="$('#ContentEdit').submit();" })</li>*@
+        </ul>
+    </div>
+}
+
+<h2>@Model.Id</h2>
+@using (Html.BeginForm("Save", "Home", FormMethod.Post, new {id="ContentEdit"}))
+{
+    @Html.TextArea("Content", Model.Content, 20, 80, null)
+    <br />
+    <input type="submit" value="Save" />
+}
+
+

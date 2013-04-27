@@ -309,6 +309,7 @@
       <BrowseToURL>~/Shared/_Layout</BrowseToURL>
     </Content>
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Home\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

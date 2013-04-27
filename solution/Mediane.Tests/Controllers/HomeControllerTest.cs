@@ -34,7 +34,7 @@ namespace Mediane.Tests.Controllers
             ContentModel model = result.Model as ContentModel;
             Assert.IsNotNull(model);
 
-            Assert.AreEqual("New page template", model.Rendered);
+            Assert.IsTrue(model.Rendered.Contains("New page template"));
         }
 
         //Install-Package MvcRouteUnitTester
@@ -72,13 +72,19 @@ namespace Mediane.Tests.Controllers
             RouteAssert.HasRoute(Routes, "/Hom", mainPageRoute);
         }
 
-        //[TestMethod]
-        //public void WrongUrlShouldNoRoutes()
-        //{
-        //    RouteAssert.NoRoute(Routes, "/home/index/asf/asdf");
-        //    RouteAssert.NoRoute(Routes, "/home/indexa");
-        //    RouteAssert.NoRoute(Routes, "/home1/index");
-        //}
+        [TestMethod]
+        public void EditUrlShouldRoute()
+        {
+            var route = new { controller = "Home", action = "Edit", id = "Main_Page" };
+            RouteAssert.HasRoute(Routes, "/home/edit/Main_Page", route);
+        }
+
+        [TestMethod]
+        public void SaveUrlShouldRoute()
+        {
+            var route = new { controller = "Home", action = "Save", id = "Main_Page" };
+            RouteAssert.HasRoute(Routes, "/home/save/Main_Page", route);
+        }
     }
 
 
@@ -115,6 +121,29 @@ namespace Mediane.Tests.Controllers
             ViewResult result = controller.Contact() as ViewResult;
 
             Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void EditShouldMakeEditView()
+        {
+            HomeController controller = new HomeController();
+
+            ViewResult result = controller.Edit("main") as ViewResult;
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Edit", result.ViewName);
+            Assert.AreEqual("main", (result.Model as ContentModel).Id);
+        }
+
+        [TestMethod]
+        public void SaveShouldRedirectToIndex()
+        {
+            HomeController controller = new HomeController();
+
+            var result = controller.Save(" main", "new content") as RedirectToRouteResult;
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Home", result.RouteValues["controller"]);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.AreEqual("main", result.RouteValues["Id"]);
         }
     }
 }

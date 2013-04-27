@@ -9,17 +9,13 @@
            <li><a href="#" class="here">Document</a></li>
             <li><a href="#">Comment</a></li>
             <li><a href="#">Property</a></li>
-            <!--
-              <li><a href="#">History</a></li>
-              <li><a href="#">Permission</a></li>
-              <li><a href="#">Workflow</a></li>
-        -->
             <li><a href="#">Attach</a></li>
         </ul>
 
         <ul class="toolbox">
             <li><a href="#">Print</a></li>
-            <li><a href="#">Edit</a></li>
+            @* <li>@Html.ActionLink("Edit", "Edit", "Home", new {id=Model.Id})</li>*@
+            <li>@Html.RouteLink("Edit", "Home", new {Controller="Home", Action="Edit", Id = Model.Id })</li>
         </ul>
     </div>
 
@@ -27,4 +23,4 @@
 
 <h3>@ViewBag.Title</h3>
 
-@Model.Rendered
+@Html.Raw(Model.Rendered)

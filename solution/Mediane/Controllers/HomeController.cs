@@ -11,9 +11,6 @@ namespace Mediane.Controllers
     {
         public ActionResult Redirect()
         {
-            //return RedirectToActionPermanent(actionName, controllerName);
-            
-            //return RedirectToActionPermanent("Index", "Home");
             return RedirectToRoutePermanent("Home", new { Controller = "Home", Action = "Index", Id = "Main_Page"});
         }
     }
@@ -22,16 +19,18 @@ namespace Mediane.Controllers
     {
         public ActionResult Index(string id = "")
         {
-            var model = new ContentModel();
-            model.Rendered = "New page template";
+            var model = new ContentModel(id);
+            model.Content = "New page template";
 
             return View(model);
         }
 
-        //public ActionResult Index(ContentModel model)
-        //{
-        //    return View("Index", model);
-        //}
+        public ActionResult Edit(string id)
+        {
+            var model = new ContentModel(id);
+            model.Content = "[" + id + "] content";
+            return View("Edit", model);
+        }
 
         public ActionResult About()
         {
@@ -47,5 +46,13 @@ namespace Mediane.Controllers
             return View();
         }
 
+
+        public ActionResult Save(string id, string Content)
+        {
+            var model = new ContentModel(id);
+            model.Content = Content;
+            //return Redirect("/Home/Index/" + model.Id);
+            return RedirectToAction("Index", "Home", new { Id = model.Id });
+        }
     }
 }

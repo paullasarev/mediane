@@ -23,7 +23,7 @@ namespace Mediane
                 name: "Home",
                 url: "Home/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id =" Main_Page" },
-                constraints: new { controller = "Home", action =  "Index|About|Contact" }
+                constraints: new { controller = "Home", action =  "Index|About|Contact|Edit|Save" }
             );
 
             routes.MapRoute(

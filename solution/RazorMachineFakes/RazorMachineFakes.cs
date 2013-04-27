@@ -28,39 +28,22 @@ namespace RazorMachineFakes
         }
     }
 
+    public class FakeBeginForm : IDisposable
+    {
+        public FakeBeginForm(
+            string actionName,
+            string controllerName,
+            FormMethod method)
+        {
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
     public static class Html
     {
-        // Summary:
-        //     Returns an anchor element (a element) that contains the virtual path of the
-        //     specified action.
-        //
-        // Parameters:
-        //   htmlHelper:
-        //     The HTML helper instance that this method extends.
-        //
-        //   linkText:
-        //     The inner text of the anchor element.
-        //
-        //   actionName:
-        //     The name of the action.
-        //
-        //   controllerName:
-        //     The name of the controller.
-        //
-        //   routeValues:
-        //     An object that contains the parameters for a route. The parameters are retrieved
-        //     through reflection by examining the properties of the object. The object
-        //     is typically created by using object initializer syntax.
-        //
-        //   htmlAttributes:
-        //     An object that contains the HTML attributes to set for the element.
-        //
-        // Returns:
-        //     An anchor element (a element).
-        //
-        // Exceptions:
-        //   System.ArgumentException:
-        //     The linkText parameter is null or empty.
         public static LiteralString ActionLink(
             string linkText,
             string actionName,
@@ -78,36 +61,6 @@ namespace RazorMachineFakes
         }
 
 
-        //
-        // Summary:
-        //     Returns an anchor element (a element) that contains the virtual path of the
-        //     specified action.
-        //
-        // Parameters:
-        //   htmlHelper:
-        //     The HTML helper instance that this method extends.
-        //
-        //   linkText:
-        //     The inner text of the anchor element.
-        //
-        //   routeName:
-        //     The name of the route that is used to return a virtual path.
-        //
-        //   routeValues:
-        //     An object that contains the parameters for a route. The parameters are retrieved
-        //     through reflection by examining the properties of the object. The object
-        //     is typically created by using object initializer syntax.
-        //
-        //   htmlAttributes:
-        //     An object that contains the HTML attributes to set for the element.
-        //
-        // Returns:
-        //     An anchor element (a element).
-        //
-        // Exceptions:
-        //   System.ArgumentException:
-        //     The linkText parameter is null or empty.
-        //
         public static LiteralString RouteLink(
             string linkText,
             string routeName,
@@ -129,6 +82,27 @@ namespace RazorMachineFakes
             ViewDataDictionary viewData = null)
         {
             var result = "<partial>" + partialViewName + "</partial>";
+            return new LiteralString(result);
+        }
+
+        public static LiteralString Raw(string what)
+        {
+            return new LiteralString(what);
+        }
+
+        public static FakeBeginForm BeginForm(
+            string actionName,
+            string controllerName,
+            FormMethod method,
+            object htmlAttributes = null)
+        {
+            return new FakeBeginForm(actionName, controllerName, method);
+        }
+
+        public static LiteralString TextArea(
+            string name, string value, int nrows = 20, int ncolumns = 60, object htmlAttributes = null)
+        {
+            var result = "<input type=\"text\" name=\"" + name + "\">" + value + "</input> ";
             return new LiteralString(result);
         }
     }

@@ -24,6 +24,7 @@ namespace Mediane.Tests.Views
 
   <namespaces>
     <add namespace=""RazorMachineFakes""/>
+    <add namespace=""System.Web.Mvc""/>
   </namespaces>
 
   <references>
@@ -38,12 +39,12 @@ namespace Mediane.Tests.Views
     {
         RazorMachine Engine = new RazorMachine(Constants.Config);
         const string content = "Wiki content";
-        ContentModel model = new ContentModel();
+        ContentModel model = new ContentModel("main");
         ITemplate template;
 
         public HomeIndexViewTest()
         {
-            model.Rendered = content;
+            model.Content = content;
             template = Engine.ExecuteUrl("~/Home/Index", model, null);
         }
 
@@ -52,7 +53,7 @@ namespace Mediane.Tests.Views
         {
             var rendered = template.Result;
 
-            Assert.IsTrue(rendered.Contains(content));
+            Assert.IsTrue(rendered.Contains(model.Rendered));
         }
 
         [TestMethod]
@@ -64,4 +65,29 @@ namespace Mediane.Tests.Views
         }
 
     }
+
+    [TestClass]
+    public class HomeEditViewTest
+    {
+        RazorMachine Engine = new RazorMachine(Constants.Config);
+        const string content = "Wiki content";
+        ContentModel model = new ContentModel("main");
+        ITemplate template;
+
+        public HomeEditViewTest()
+        {
+            model.Content = content;
+            template = Engine.ExecuteUrl("~/Home/Edit", model, null);
+        }
+
+        [TestMethod]
+        public void RenderedHtmlShouldContainModelRenderProperty()
+        {
+            var rendered = template.Result;
+
+            Assert.IsTrue(rendered.Contains(content));
+        }
+
+    }
+
 }

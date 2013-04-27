@@ -1,0 +1,13 @@
+*.suo
+bin
+obj
+*.user
+bin
+TestResults
+/solution/UpgradeLog.XML
+/solution/UpgradeLog.htm
+/solution/Backup
+/solution/Mediane.Tests/App_Start
+App_Data
+_lib
+_UpgradeReport_Files
