@@ -179,17 +179,21 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RepositoryConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DomainModel\ContentModelRepository.cs" />
+    <Compile Include="DomainModel\IContentModelRepository.cs" />
+    <Compile Include="DomainModel\RepositoryTable.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ViewMenuHelper.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\ContentModel.cs" />
+    <Compile Include="DomainModel\ContentModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

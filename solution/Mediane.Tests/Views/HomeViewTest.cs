@@ -2,11 +2,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mediane.Controllers;
 using System.Web.Mvc;
-using Mediane.Models;
+using Mediane.DomainModel;
 using System.IO;
 using System.Web.Routing;
 using Xipton.Razor;
 using System.Web;
+using Mediane.Tests.Models;
 
 namespace Mediane.Tests.Views
 {
@@ -40,11 +41,13 @@ namespace Mediane.Tests.Views
     {
         RazorMachine Engine = new RazorMachine(Constants.Config);
         const string content = "Wiki content";
-        ContentModel model = new ContentModel("main");
         ITemplate template;
+        FakeContentModelRepository repository = new FakeContentModelRepository();
+        ContentModel model;
 
         public HomeIndexViewTest()
         {
+            model = repository.Create("main");
             model.Content = content;
             template = Engine.ExecuteUrl("~/Home/Index", model, null);
         }
@@ -72,11 +75,14 @@ namespace Mediane.Tests.Views
     {
         RazorMachine Engine = new RazorMachine(Constants.Config);
         const string content = "Wiki content";
-        ContentModel model = new ContentModel("main");
         ITemplate template;
+
+        FakeContentModelRepository repository = new FakeContentModelRepository();
+        ContentModel model;
 
         public HomeEditViewTest()
         {
+            model = repository.Create("main");
             model.Content = content;
             template = Engine.ExecuteUrl("~/Home/Edit", model, null);
         }

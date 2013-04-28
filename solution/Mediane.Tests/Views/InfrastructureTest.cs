@@ -3,10 +3,11 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mediane.Infrastructure;
-using Mediane.Models;
+using Mediane.DomainModel;
 using System.Web.Mvc;
 using XmlUnit;
 using System.Web;
+using Mediane.Tests.Models;
 
 namespace Mediane.Tests.Views
 {
@@ -14,7 +15,14 @@ namespace Mediane.Tests.Views
     public class InfrastructureTest
     {
         HtmlHelper helper = new HtmlHelper(new ViewContext(), new Utils.FakeViewDataContainer());
-        ContentModel model = new ContentModel("main");
+
+        FakeContentModelRepository repository = new FakeContentModelRepository();
+        ContentModel model;
+
+        public InfrastructureTest()
+        {
+            model = repository.Create("main");
+        }
 
         [TestMethod]
         public void ViewMenuShouldContainItems()

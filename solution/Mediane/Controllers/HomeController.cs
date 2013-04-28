@@ -1,4 +1,4 @@
-﻿using Mediane.Models;
+﻿using Mediane.DomainModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +17,18 @@ namespace Mediane.Controllers
 
     public class HomeController : Controller
     {
+        IContentModelRepository repository = RepositoryTable.Repositories.Locate<IContentModelRepository>();
         public ActionResult Index(string id = "")
         {
-            var model = new ContentModel(id);
-            model.Content = "New page template";
+            var model = repository.Load(id);
 
             return View(model);
         }
 
         public ActionResult Edit(string id)
         {
-            var model = new ContentModel(id);
-            model.Content = "[" + id + "] content";
+            var model = repository.Load(id);
+
             return View("Edit", model);
         }
 
@@ -49,8 +49,13 @@ namespace Mediane.Controllers
 
         public ActionResult Save(string id, string Content, string action)
         {
-            var model = new ContentModel(id);
-            model.Content = Content;
+            var model = repository.Load(id);
+            if (action == "Save")
+            {
+                model.Content = Content;
+                repository.Save(model);
+            }
+
             return RedirectToAction("Index", "Home", new { Id = model.Id });
         }
     }

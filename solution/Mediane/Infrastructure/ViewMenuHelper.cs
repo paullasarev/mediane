@@ -1,4 +1,4 @@
-﻿using Mediane.Models;
+﻿using Mediane.DomainModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

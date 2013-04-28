@@ -6,9 +6,11 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mediane;
 using Mediane.Controllers;
-using Mediane.Models;
+using Mediane.DomainModel;
 using MvcRouteTester;
 using System.Web.Routing;
+using System.Collections.Specialized;
+using Mediane.Tests.Models;
 
 namespace Mediane.Tests.Controllers
 {
@@ -23,19 +25,6 @@ namespace Mediane.Tests.Controllers
         }
 
         RouteCollection Routes;
-
-        [TestMethod]
-        public void IndexShouldMakeContentModel()
-        {
-            HomeController controller = new HomeController();
-
-            ViewResult result = controller.Index() as ViewResult;
-
-            ContentModel model = result.Model as ContentModel;
-            Assert.IsNotNull(model);
-
-            Assert.IsTrue(model.Rendered.Contains("New page template"));
-        }
 
         //Install-Package MvcRouteUnitTester
 
@@ -91,6 +80,27 @@ namespace Mediane.Tests.Controllers
     [TestClass]
     public class HomeControllerTest
     {
+        public HomeControllerTest()
+        {
+            RepositoryTable.Repositories.Register<IContentModelRepository>(new FakeContentModelRepository());
+            var repo = RepositoryTable.Repositories.Locate<IContentModelRepository>();
+            var model = repo.Create("main");
+            repo.Save(model);
+        }
+
+        [TestMethod]
+        public void IndexShouldMakeContentModel()
+        {
+            HomeController controller = new HomeController();
+
+            ViewResult result = controller.Index("main") as ViewResult;
+
+            ContentModel model = result.Model as ContentModel;
+            Assert.IsNotNull(model);
+
+            Assert.IsTrue(model.Rendered.Contains("New page template"));
+        }
+
         [TestMethod]
         public void RootRedirectShouldRedirectToHomeIndex()
         {
@@ -145,5 +155,47 @@ namespace Mediane.Tests.Controllers
             Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual("main", result.RouteValues["Id"]);
         }
+
+        [TestMethod]
+        public void SaveShouldStoreNewContent()
+        {
+            HomeController controller = new HomeController();
+
+            var result = controller.Save(" main", "new content", "Save") as RedirectToRouteResult;
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Home", result.RouteValues["controller"]);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.AreEqual("main", result.RouteValues["Id"]);
+        }
+
+        //[TestMethod]
+        //public void ShouldBindSaveController()
+        //{
+        //    // Arrange
+        //    var formCollection = new NameValueCollection { 
+        //        { "foo.month", "2" },
+        //        { "foo.day", "12" },
+        //        { "foo.year", "1964" }
+        //    };
+
+        //    var valueProvider = new NameValueCollectionValueProvider(formCollection, null);
+        //    var modelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(ContentModel));
+
+        //    var bindingContext = new ModelBindingContext
+        //    {
+        //        ModelName = "foo",
+        //        ValueProvider = valueProvider,
+        //        ModelMetadata = modelMetadata
+        //    };
+
+        //    var b = new DefaultModelBinder();
+        //    ControllerContext controllerContext = new ControllerContext();
+
+        //    // Act
+        //    DateTime result = (DateTime)b.BindModel(controllerContext, bindingContext);
+
+        //    // Assert
+        //    Assert.AreEqual(DateTime.Parse("1964-02-12 12:00:00 am"), result);
+        //}
     }
 }
