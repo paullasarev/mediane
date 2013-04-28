@@ -105,5 +105,11 @@ namespace RazorMachineFakes
             var result = "<input type=\"text\" name=\"" + name + "\">" + value + "</input> ";
             return new LiteralString(result);
         }
+
+        public static LiteralString ViewMenu(object model, string viewName)
+        {
+            return new LiteralString("<li><a>View</a></li>");
+        }
+
     }
 }

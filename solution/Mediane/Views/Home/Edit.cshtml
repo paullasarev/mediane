@@ -1,4 +1,5 @@
-﻿@model Mediane.Models.ContentModel
+﻿@using Mediane.Infrastructure
+@model Mediane.Models.ContentModel
 
 @{
     ViewBag.Title = "Edit";
@@ -8,15 +9,12 @@
 @section viewtabs {
     <div class="nav">
         <ul class="tabs">
-            <li><a href="#" class="here">Document</a></li>
-            <li><a href="#">Comment</a></li>
-            <li><a href="#">Property</a></li>
-            <li><a href="#">Attach</a></li>
+            @Html.ViewMenu(Model, "Index")
         </ul>
 
         <ul class="toolbox">
-            <li><a onclick="$('#ContentEdit').submit();">Save</a></li>
-            @*<li>@Html.ActionLink("Save", "Save", "Home", new { id = Model.Id }, new { onclick="$('#ContentEdit').submit();" })</li>*@
+            <li><a onclick="$('#ContentEdit #cancel').click();">Cancel</a></li>
+            <li><a onclick="$('#ContentEdit #ok').click();">Save</a></li>
         </ul>
     </div>
 }
@@ -26,7 +24,8 @@
 {
     @Html.TextArea("Content", Model.Content, 20, 80, null)
     <br />
-    <input type="submit" value="Save" />
+    <input type="submit" name="action" value="Save" id="ok" />
+    <input type="submit" name="action" value="Cancel" id="cancel" />
 }
 
 

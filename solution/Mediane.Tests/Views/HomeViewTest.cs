@@ -24,6 +24,7 @@ namespace Mediane.Tests.Views
 
   <namespaces>
     <add namespace=""RazorMachineFakes""/>
+    <add namespace=""Mediane.Infrastructure""/>
     <add namespace=""System.Web.Mvc""/>
   </namespaces>
 

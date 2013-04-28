@@ -139,7 +139,7 @@ namespace Mediane.Tests.Controllers
         {
             HomeController controller = new HomeController();
 
-            var result = controller.Save(" main", "new content") as RedirectToRouteResult;
+            var result = controller.Save(" main", "new content", "Save") as RedirectToRouteResult;
             Assert.IsNotNull(result);
             Assert.AreEqual("Home", result.RouteValues["controller"]);
             Assert.AreEqual("Index", result.RouteValues["action"]);

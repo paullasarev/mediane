@@ -95,21 +95,11 @@ namespace Mediane.Tests.Models
             Assert.AreEqual(content, model.Content);
         }
 
-        void AssertXmlIsEqual(string expect, string actual)
-        {
-            XmlAssertion.AssertXmlEquals(
-                new XmlDiff(
-                    new XmlInput(expect),
-                    new XmlInput(actual),
-                    new DiffConfiguration("XmlUnit", System.Xml.WhitespaceHandling.None)
-                    ));
-        }
-
         [TestMethod]
         public void RenderedShouldProduceParagraphTag()
         {
             model.Content = "one paragraph";
-            AssertXmlIsEqual(" <p>one paragraph</p>\n ", model.Rendered);
+            Utils.XmlAssert.IsEqual(" <p>one paragraph</p>\n ", model.Rendered);
         }
 
     }

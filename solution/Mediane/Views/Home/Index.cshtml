@@ -1,4 +1,5 @@
-﻿@model Mediane.Models.ContentModel
+﻿@using Mediane.Infrastructure
+@model Mediane.Models.ContentModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -6,10 +7,7 @@
 
     <div class="nav">
         <ul class="tabs">
-           <li><a href="#" class="here">Document</a></li>
-            <li><a href="#">Comment</a></li>
-            <li><a href="#">Property</a></li>
-            <li><a href="#">Attach</a></li>
+            @Html.ViewMenu(Model, "Index")
         </ul>
 
         <ul class="toolbox">

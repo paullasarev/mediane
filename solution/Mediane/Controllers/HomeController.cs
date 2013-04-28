@@ -47,11 +47,10 @@ namespace Mediane.Controllers
         }
 
 
-        public ActionResult Save(string id, string Content)
+        public ActionResult Save(string id, string Content, string action)
         {
             var model = new ContentModel(id);
             model.Content = Content;
-            //return Redirect("/Home/Index/" + model.Id);
             return RedirectToAction("Index", "Home", new { Id = model.Id });
         }
     }
