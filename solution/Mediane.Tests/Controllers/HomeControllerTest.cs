@@ -80,22 +80,24 @@ namespace Mediane.Tests.Controllers
     [TestClass]
     public class HomeControllerTest
     {
+        private IArticleRepository repository;
+        private HomeController controller;
+
         public HomeControllerTest()
         {
-            RepositoryTable.Repositories.Register<IContentModelRepository>(new FakeContentModelRepository());
-            var repo = RepositoryTable.Repositories.Locate<IContentModelRepository>();
-            var model = repo.Create("main");
-            repo.Save(model);
+            repository = new FakeArticleRepository();
+            var model = repository.Load("main");
+            repository.Save(model);
+
+            controller = new HomeController(repository);
         }
 
         [TestMethod]
         public void IndexShouldMakeContentModel()
         {
-            HomeController controller = new HomeController();
-
             ViewResult result = controller.Index("main") as ViewResult;
 
-            ContentModel model = result.Model as ContentModel;
+            Article model = result.Model as Article;
             Assert.IsNotNull(model);
 
             Assert.IsTrue(model.Rendered.Contains("New page template"));
@@ -116,8 +118,6 @@ namespace Mediane.Tests.Controllers
         [TestMethod]
         public void About()
         {
-            HomeController controller = new HomeController();
-
             ViewResult result = controller.About() as ViewResult;
 
             Assert.IsNotNull(result);
@@ -126,8 +126,6 @@ namespace Mediane.Tests.Controllers
         [TestMethod]
         public void Contact()
         {
-            HomeController controller = new HomeController();
-
             ViewResult result = controller.Contact() as ViewResult;
 
             Assert.IsNotNull(result);
@@ -136,19 +134,15 @@ namespace Mediane.Tests.Controllers
         [TestMethod]
         public void EditShouldMakeEditView()
         {
-            HomeController controller = new HomeController();
-
             ViewResult result = controller.Edit("main") as ViewResult;
             Assert.IsNotNull(result);
             Assert.AreEqual("Edit", result.ViewName);
-            Assert.AreEqual("main", (result.Model as ContentModel).Id);
+            Assert.AreEqual("main", (result.Model as Article).Id);
         }
 
         [TestMethod]
         public void SaveShouldRedirectToIndex()
         {
-            HomeController controller = new HomeController();
-
             var result = controller.Save(" main", "new content", "Save") as RedirectToRouteResult;
             Assert.IsNotNull(result);
             Assert.AreEqual("Home", result.RouteValues["controller"]);
@@ -159,8 +153,6 @@ namespace Mediane.Tests.Controllers
         [TestMethod]
         public void SaveShouldStoreNewContent()
         {
-            HomeController controller = new HomeController();
-
             var result = controller.Save(" main", "new content", "Save") as RedirectToRouteResult;
             Assert.IsNotNull(result);
             Assert.AreEqual("Home", result.RouteValues["controller"]);
@@ -179,7 +171,7 @@ namespace Mediane.Tests.Controllers
         //    };
 
         //    var valueProvider = new NameValueCollectionValueProvider(formCollection, null);
-        //    var modelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(ContentModel));
+        //    var modelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, typeof(Article));
 
         //    var bindingContext = new ModelBindingContext
         //    {

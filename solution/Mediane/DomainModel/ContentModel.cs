@@ -5,11 +5,11 @@ using System.Web;
 
 namespace Mediane.DomainModel
 {
-    public class ContentModel
+    public class Article
     {
         public string Id { get; private set; }
 
-        protected ContentModel(string newId)
+        protected Article(string newId)
         {
             this.Id = newId.Trim();
         }

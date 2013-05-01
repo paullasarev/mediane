@@ -10,7 +10,7 @@ namespace Mediane
     {
         public static void RegisterRepositories(RepositoryTable repository)
         {
-            repository.Register<IContentModelRepository>(new ContentModelRepository());
+            repository.Register<IArticleRepository>(new ArticleRepository());
         }
     }
 }

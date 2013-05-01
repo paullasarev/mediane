@@ -142,6 +142,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainModel\ArticleRepositoryTest.cs" />
+    <Compile Include="DomainModel\UnitTest1.cs" />
     <Compile Include="Models\ContentModelTest.cs" />
     <Compile Include="Models\FakeContentModelRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

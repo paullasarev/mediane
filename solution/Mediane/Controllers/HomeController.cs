@@ -17,7 +17,18 @@ namespace Mediane.Controllers
 
     public class HomeController : Controller
     {
-        IContentModelRepository repository = RepositoryTable.Repositories.Locate<IContentModelRepository>();
+        private IArticleRepository repository;
+
+        public HomeController(IArticleRepository newRepository)
+        {
+            repository = newRepository;
+        }
+
+        public HomeController()
+        {
+            repository = RepositoryTable.Repositories.Locate<IArticleRepository>();
+        }
+
         public ActionResult Index(string id = "")
         {
             var model = repository.Load(id);

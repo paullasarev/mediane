@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Mediane.DomainModel
 {
-    public interface IContentModelRepository
+    public interface IArticleRepository
     {
-        ContentModel Create(string id);
-        ContentModel Load(string id);
-        void Save(ContentModel model);
+        Article Load(string id);
+        void Save(Article model);
     }
 }

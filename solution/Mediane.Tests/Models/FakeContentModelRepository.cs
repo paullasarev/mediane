@@ -6,15 +6,15 @@ using System.Text;
 
 namespace Mediane.Tests.Models
 {
-    class ContentModelImpl : ContentModel
+    class ArticleImpl : Article
     {
-        public ContentModelImpl(string id)
+        public ArticleImpl(string id)
             : base(id)
         {
         }
     }
 
-    class FakeContentModelRepository : ContentModelRepository
+    class FakeArticleRepository : ArticleRepository
     {
     }
 }

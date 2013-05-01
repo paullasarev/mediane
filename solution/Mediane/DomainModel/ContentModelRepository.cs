@@ -6,32 +6,32 @@ using System.Web;
 
 namespace Mediane.DomainModel
 {
-    class ContentModelImpl : ContentModel
+    class ArticleImpl : Article
     {
-        public ContentModelImpl(string id)
+        public ArticleImpl(string id)
             : base(id)
         {
         }
     }
 
 
-    public class ContentModelRepository : IContentModelRepository
+    public class ArticleRepository : IArticleRepository
     {
-        Dictionary<string, ContentModel> Models = new Dictionary<string,ContentModel>();
+        protected Dictionary<string, Article> Models = new Dictionary<string,Article>();
 
-        public Mediane.DomainModel.ContentModel Create(string id)
+        protected Article Create(string id)
         {
-            var model = new ContentModelImpl(id);
+            var model = new ArticleImpl(id);
             model.Content = "New page template";
             return model;
         }
 
-        public Mediane.DomainModel.ContentModel Load(string id)
+        public Article Load(string id)
         {
             string key = id.Trim();
             if (Models.ContainsKey(key))
             {
-                return Models[id.Trim()];
+                return Models[key];
             }
             else
             {
@@ -39,7 +39,7 @@ namespace Mediane.DomainModel
             }
         }
 
-        public void Save(Mediane.DomainModel.ContentModel model)
+        public void Save(Article model)
         {
             Models[model.Id] = model;
         }

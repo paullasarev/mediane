@@ -42,12 +42,12 @@ namespace Mediane.Tests.Views
         RazorMachine Engine = new RazorMachine(Constants.Config);
         const string content = "Wiki content";
         ITemplate template;
-        FakeContentModelRepository repository = new FakeContentModelRepository();
-        ContentModel model;
+        FakeArticleRepository repository = new FakeArticleRepository();
+        Article model;
 
         public HomeIndexViewTest()
         {
-            model = repository.Create("main");
+            model = repository.Load("main");
             model.Content = content;
             template = Engine.ExecuteUrl("~/Home/Index", model, null);
         }
@@ -77,12 +77,12 @@ namespace Mediane.Tests.Views
         const string content = "Wiki content";
         ITemplate template;
 
-        FakeContentModelRepository repository = new FakeContentModelRepository();
-        ContentModel model;
+        FakeArticleRepository repository = new FakeArticleRepository();
+        Article model;
 
         public HomeEditViewTest()
         {
-            model = repository.Create("main");
+            model = repository.Load("main");
             model.Content = content;
             template = Engine.ExecuteUrl("~/Home/Edit", model, null);
         }

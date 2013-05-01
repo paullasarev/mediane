@@ -9,7 +9,7 @@ namespace Mediane.Infrastructure
 {
     public static class ViewMenuHelper
     {
-        public static MvcHtmlString ViewMenu(this HtmlHelper helper, ContentModel model, string viewName)
+        public static MvcHtmlString ViewMenu(this HtmlHelper helper, Article model, string viewName)
         {
             string result = @"
             <li><a href=""#"" class=""here"">Document</a></li>

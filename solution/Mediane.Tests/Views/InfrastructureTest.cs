@@ -16,12 +16,12 @@ namespace Mediane.Tests.Views
     {
         HtmlHelper helper = new HtmlHelper(new ViewContext(), new Utils.FakeViewDataContainer());
 
-        FakeContentModelRepository repository = new FakeContentModelRepository();
-        ContentModel model;
+        FakeArticleRepository repository = new FakeArticleRepository();
+        Article model;
 
         public InfrastructureTest()
         {
-            model = repository.Create("main");
+            model = repository.Load("main");
         }
 
         [TestMethod]

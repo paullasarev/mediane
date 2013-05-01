@@ -15,12 +15,12 @@ namespace Mediane.Tests.Models
     [TestClass]
     public class ContentModelTest
     {
-        FakeContentModelRepository repository = new FakeContentModelRepository();
-        ContentModel model;
+        FakeArticleRepository repository = new FakeArticleRepository();
+        Article model;
 
         public ContentModelTest()
         {
-            model = repository.Create("main");
+            model = repository.Load("main");
         }
 
         [TestMethod]
@@ -32,7 +32,7 @@ namespace Mediane.Tests.Models
         [TestMethod]
         public void ShouldTrimIdSpaces()
         {
-            ContentModel model = repository.Create("main");
+            Article model = repository.Load("main");
             Assert.AreEqual("main", model.Id);
         }
 
@@ -67,15 +67,15 @@ namespace Mediane.Tests.Models
             var repositoryTable = new RepositoryTable();
             try
             {
-                var repository = repositoryTable.Locate<IContentModelRepository>();
-                Assert.Fail("Should not locate ContentModel");
+                var repository = repositoryTable.Locate<IArticleRepository>();
+                Assert.Fail("Should not locate Article");
             }
             catch
             {
             }
 
-            repositoryTable.Register<IContentModelRepository>(new FakeContentModelRepository());
-            var repo = repositoryTable.Locate<IContentModelRepository>();
+            repositoryTable.Register<IArticleRepository>(new FakeArticleRepository());
+            var repo = repositoryTable.Locate<IArticleRepository>();
             Assert.IsNotNull(repo);
         }
 
@@ -85,17 +85,17 @@ namespace Mediane.Tests.Models
             var repositoryTable = RepositoryTable.Repositories;
             try
             {
-                var repository = repositoryTable.Locate<IContentModelRepository>();
-                Assert.Fail("Should not locate ContentModel");
+                var repository = repositoryTable.Locate<IArticleRepository>();
+                Assert.Fail("Should not locate Article");
             }
             catch
             {
             }
 
             RepositoryConfig.RegisterRepositories(repositoryTable);
-            var repo = repositoryTable.Locate<IContentModelRepository>();
+            var repo = repositoryTable.Locate<IArticleRepository>();
             Assert.IsNotNull(repo);
-            Assert.IsNotNull(repo as ContentModelRepository);
+            Assert.IsNotNull(repo as ArticleRepository);
         }
     
     }
