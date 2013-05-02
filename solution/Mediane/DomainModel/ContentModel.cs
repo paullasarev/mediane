@@ -9,9 +9,9 @@ namespace Mediane.DomainModel
     {
         public string Title { get; private set; }
 
-        protected Article(string newId)
+        protected Article(string title)
         {
-            this.Title = newId.Trim();
+            this.Title = title.Trim();
         }
 
         public string Rendered
@@ -44,5 +44,7 @@ namespace Mediane.DomainModel
         {
             return "<p>" + content + "</p>";
         }
+
+        public bool IsNew { get; set; }
     }
 }

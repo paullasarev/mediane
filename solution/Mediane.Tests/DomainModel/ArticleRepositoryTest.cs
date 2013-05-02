@@ -87,12 +87,12 @@ namespace Mediane.Tests.DomainModel
         {
             var repo = new ArticleRepository(ConnectionString, ProviderName);
 
-            Article a = repo.Load("Page 2");
-            Assert.AreEqual("Page 2", a.Title);
+            var title = "Page 2";
+            Article a = repo.Load(title);
+            Assert.AreEqual(title, a.Title);
             a.Content = "Sample content";
 
             repo.Save(a);
-            var title = a.Title;
 
             ArticleDb aDb = Db.SingleOrDefault<ArticleDb>("SELECT * FROM ARTICLES WHERE Title=@0", title);
 
@@ -100,5 +100,70 @@ namespace Mediane.Tests.DomainModel
             Assert.AreEqual(a.Content, aDb.Content);
         }
 
+        [TestMethod]
+        public void RepositoryShouldLoadArticle()
+        {
+            var repo = new ArticleRepository(ConnectionString, ProviderName);
+
+            var title = "Page 3";
+            Article a = repo.Create(title);
+            a.Content = "Sample content";
+            repo.Save(a);
+
+            Article a2 = repo.Load(title);
+
+            Assert.AreEqual(a.Title, a2.Title);
+            Assert.AreEqual(a.Content, a2.Content);
+        }
+
+        [TestMethod]
+        public void LoadShouldIgnoreTitleHeadTailSpaces()
+        {
+            var repo = new ArticleRepository(ConnectionString, ProviderName);
+
+            var title = "Page 4";
+            Article a = repo.Create(title);
+            a.Content = "Sample content";
+            repo.Save(a);
+
+            Article a2 = repo.Load(" Page 4 ");
+
+            Assert.AreEqual(a.Title, a2.Title);
+            Assert.AreEqual(a.Content, a2.Content);
+        }
+
+        [TestMethod]
+        public void NotExistantTitleShouldSetFlagIsNew()
+        {
+            var repo = new ArticleRepository(ConnectionString, ProviderName);
+
+            var title = "Page 5";
+
+            Article a = repo.Load(title);
+            Assert.IsTrue(a.IsNew);
+
+            repo.Save(a);
+
+            Article a2 = repo.Load(title);
+            Assert.IsFalse(a2.IsNew);
+        }
+
+        [TestMethod]
+        public void SaveShouldBeAbleTwice()
+        {
+            var repo = new ArticleRepository(ConnectionString, ProviderName);
+
+            var title = "Page 6";
+            Article a = repo.Create(title);
+            a.Content = "Sample content";
+            repo.Save(a);
+
+            a.Content = "Sample content 2";
+            repo.Save(a);
+
+            Article a2 = repo.Load(title);
+            Assert.AreEqual(a.Title, a2.Title);
+            Assert.AreEqual(a.Content, a2.Content);
+        }
     }
 }

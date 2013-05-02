@@ -8,8 +8,8 @@ namespace Mediane.DomainModel
 {
     class ArticleImpl : Article
     {
-        public ArticleImpl(string id)
-            : base(id)
+        public ArticleImpl(string title)
+            : base(title)
         {
         }
     }
@@ -23,9 +23,18 @@ namespace Mediane.DomainModel
         public string Content { get; set; }
     }
 
+    class QueryBuilder
+    {
+        public string ArticleByTitle
+        {
+            get { return "SELECT * FROM ARTICLES WHERE Title=@0"; }
+        }
+    }
+
     public class ArticleRepository : IArticleRepository
     {
         private PetaPoco.Database Db;
+        private QueryBuilder Query = new QueryBuilder();
 
         public ArticleRepository(PetaPoco.Database Db)
         {
@@ -42,34 +51,46 @@ namespace Mediane.DomainModel
             this.Db = new PetaPoco.Database(connectionStringName);
         }
 
-        protected Article Create(string id)
+        public Article Create(string title)
         {
-            var model = new ArticleImpl(id);
+            var model = new ArticleImpl(title);
+            model.IsNew = true;
             model.Content = "New page template";
             return model;
         }
 
-        public Article Load(string id)
+        public Article Load(string title)
         {
-            //string key = id.Trim();
-            //if (Models.ContainsKey(key))
-            //{
-            //    return Models[key];
-            //}
-            //else
-            //{
-            //    return Create(id);
-            //}
-            return new ArticleImpl(id);
+            ArticleImpl a = new ArticleImpl(title);
+            ArticleDb aDb = Db.SingleOrDefault<ArticleDb>(Query.ArticleByTitle, a.Title);
+            if (aDb == null)
+            {
+                a.IsNew = true;
+                a.Content = "";
+            }
+            else
+            {
+                a.Content = aDb.Content;
+            }
+            
+            return a;
         }
 
         public void Save(Article model)
         {
-            var dbModel = new ArticleDb(); ;
-            dbModel.Title = model.Title;
-            dbModel.Content = model.Content;
-
-            Db.Insert(dbModel);
+            ArticleDb dbModel = Db.SingleOrDefault<ArticleDb>(Query.ArticleByTitle, model.Title);
+            if (dbModel == null)
+            {
+                dbModel = new ArticleDb(); ;
+                dbModel.Title = model.Title;
+                dbModel.Content = model.Content;
+                Db.Insert(dbModel);
+            }
+            else
+            {
+                dbModel.Content = model.Content;
+                Db.Update(dbModel);
+            }
         }
     }
 }
