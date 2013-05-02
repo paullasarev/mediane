@@ -137,7 +137,7 @@ namespace Mediane.Tests.Controllers
             ViewResult result = controller.Edit("main") as ViewResult;
             Assert.IsNotNull(result);
             Assert.AreEqual("Edit", result.ViewName);
-            Assert.AreEqual("main", (result.Model as Article).Id);
+            Assert.AreEqual("main", (result.Model as Article).Title);
         }
 
         [TestMethod]

@@ -67,7 +67,7 @@ namespace Mediane.Controllers
                 repository.Save(model);
             }
 
-            return RedirectToAction("Index", "Home", new { Id = model.Id });
+            return RedirectToAction("Index", "Home", new { Id = model.Title });
         }
     }
 }

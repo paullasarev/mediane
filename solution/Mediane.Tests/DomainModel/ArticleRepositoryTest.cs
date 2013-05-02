@@ -5,15 +5,6 @@ using Mediane.DomainModel;
 
 namespace Mediane.Tests.DomainModel
 {
-    [PetaPoco.TableName("articles")]
-    [PetaPoco.PrimaryKey("ArticleId")]
-    public class ArticleDb
-    {
-        public long ArticleId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
-    }
-
     [TestClass]
     public class ArticleRepositoryTest
     {
@@ -91,25 +82,23 @@ namespace Mediane.Tests.DomainModel
             }
         }
 
-        //[TestMethod]
-        //public void RepositoryShouldSaveArticle()
-        //{
-        //    var repo = new ArticleRepository(Db);
+        [TestMethod]
+        public void RepositoryShouldSaveArticle()
+        {
+            var repo = new ArticleRepository(ConnectionString, ProviderName);
 
-        //    var a = repo.Load("Page 2");
-        //    Assert.AreEqual("Page 2", a.Id);
+            Article a = repo.Load("Page 2");
+            Assert.AreEqual("Page 2", a.Title);
+            a.Content = "Sample content";
 
-        //    a.Content = "Sample content";
+            repo.Save(a);
+            var title = a.Title;
 
-        //    Db.Insert(a);
-        //    var id = a.ArticleId;
+            ArticleDb aDb = Db.SingleOrDefault<ArticleDb>("SELECT * FROM ARTICLES WHERE Title=@0", title);
 
-        //    ArticleDb a2 = Db.SingleOrDefault<ArticleDb>(id);
-
-        //    Assert.AreEqual(id, a2.ArticleId);
-        //    Assert.AreEqual(a.Title, a2.Title);
-        //    Assert.AreEqual(a.Content, a2.Content);
-        //}
+            Assert.AreEqual(a.Title, aDb.Title);
+            Assert.AreEqual(a.Content, aDb.Content);
+        }
 
     }
 }

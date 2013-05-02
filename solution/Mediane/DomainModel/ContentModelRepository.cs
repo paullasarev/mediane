@@ -14,10 +14,33 @@ namespace Mediane.DomainModel
         }
     }
 
+    [PetaPoco.TableName("articles")]
+    [PetaPoco.PrimaryKey("ArticleId")]
+    public class ArticleDb
+    {
+        public long ArticleId { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+    }
 
     public class ArticleRepository : IArticleRepository
     {
-        protected Dictionary<string, Article> Models = new Dictionary<string,Article>();
+        private PetaPoco.Database Db;
+
+        public ArticleRepository(PetaPoco.Database Db)
+        {
+            this.Db = Db;
+        }
+
+        public ArticleRepository(string connectionString, string providerName)
+        {
+            this.Db = new PetaPoco.Database(connectionString, providerName);
+        }
+
+        public ArticleRepository(string connectionStringName)
+        {
+            this.Db = new PetaPoco.Database(connectionStringName);
+        }
 
         protected Article Create(string id)
         {
@@ -28,20 +51,25 @@ namespace Mediane.DomainModel
 
         public Article Load(string id)
         {
-            string key = id.Trim();
-            if (Models.ContainsKey(key))
-            {
-                return Models[key];
-            }
-            else
-            {
-                return Create(id);
-            }
+            //string key = id.Trim();
+            //if (Models.ContainsKey(key))
+            //{
+            //    return Models[key];
+            //}
+            //else
+            //{
+            //    return Create(id);
+            //}
+            return new ArticleImpl(id);
         }
 
         public void Save(Article model)
         {
-            Models[model.Id] = model;
+            var dbModel = new ArticleDb(); ;
+            dbModel.Title = model.Title;
+            dbModel.Content = model.Content;
+
+            Db.Insert(dbModel);
         }
     }
 }

@@ -13,7 +13,7 @@
         <ul class="toolbox">
             <li><a href="#">Print</a></li>
             @* <li>@Html.ActionLink("Edit", "Edit", "Home", new {id=Model.Id})</li>*@
-            <li>@Html.RouteLink("Edit", "Home", new {Controller="Home", Action="Edit", Id = Model.Id })</li>
+            <li>@Html.RouteLink("Edit", "Home", new {Controller="Home", Action="Edit", Id = Model.Title })</li>
         </ul>
     </div>
 

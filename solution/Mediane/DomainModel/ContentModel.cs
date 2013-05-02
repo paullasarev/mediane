@@ -7,11 +7,11 @@ namespace Mediane.DomainModel
 {
     public class Article
     {
-        public string Id { get; private set; }
+        public string Title { get; private set; }
 
         protected Article(string newId)
         {
-            this.Id = newId.Trim();
+            this.Title = newId.Trim();
         }
 
         public string Rendered

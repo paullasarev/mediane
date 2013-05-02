@@ -26,14 +26,14 @@ namespace Mediane.Tests.Models
         [TestMethod]
         public void ShouldHaveIdProperty()
         {
-            Assert.AreEqual("main", model.Id);
+            Assert.AreEqual("main", model.Title);
         }
 
         [TestMethod]
         public void ShouldTrimIdSpaces()
         {
             Article model = repository.Load("main");
-            Assert.AreEqual("main", model.Id);
+            Assert.AreEqual("main", model.Title);
         }
 
         [TestMethod]
