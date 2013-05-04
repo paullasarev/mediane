@@ -2,9 +2,51 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using Mediane.DomainModel;
+using Mediane.Tests.Models;
 
 namespace Mediane.Tests.DomainModel
 {
+    [TestClass]
+    public class RepositoryRegistrationTest
+    {
+        [TestMethod]
+        public void RepositoryShouldRegisterComponentModelRepository()
+        {
+            var repositoryTable = new RepositoryTable();
+            try
+            {
+                var repository = repositoryTable.Locate<IArticleRepository>();
+                Assert.Fail("Should not locate Article");
+            }
+            catch
+            {
+            }
+
+            repositoryTable.Register<IArticleRepository>(new FakeArticleRepository());
+            var repo = repositoryTable.Locate<IArticleRepository>();
+            Assert.IsNotNull(repo);
+        }
+
+        [TestMethod]
+        public void RepositoryConfigShouldRegisterContentModelRepository()
+        {
+            var repositoryTable = RepositoryTable.Repositories;
+            try
+            {
+                var repository = repositoryTable.Locate<IArticleRepository>();
+                Assert.Fail("Should not locate Article");
+            }
+            catch
+            {
+            }
+
+            RepositoryConfig.RegisterRepositories(repositoryTable);
+            var repo = repositoryTable.Locate<IArticleRepository>();
+            Assert.IsNotNull(repo);
+            Assert.IsNotNull(repo as ArticleRepository);
+        }
+    }
+
     [TestClass]
     public class ArticleRepositoryTest
     {

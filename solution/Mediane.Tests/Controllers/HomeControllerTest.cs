@@ -15,69 +15,6 @@ using Mediane.Tests.Models;
 namespace Mediane.Tests.Controllers
 {
     [TestClass]
-    public class HomeIndexController
-    {
-        [TestInitialize]
-        public void SetUp()
-        {
-            Routes = new RouteCollection();
-            RouteConfig.RegisterRoutes(Routes);
-        }
-
-        RouteCollection Routes;
-
-        //Install-Package MvcRouteUnitTester
-
-        [TestMethod]
-        public void IndexUrlShouldCallMainPage()
-        {
-            RouteAssert.HasRoute(Routes, "/home/index");
-            
-            var mainPageRoute = new { controller = "Home", action = "Index", id = "Main_Page" };
-            RouteAssert.HasRoute(Routes, "/home/index/Main_Page", mainPageRoute);
-
-            var pageRoute = new { controller = "Home", action = "Index", id = "Other_Page" };
-            RouteAssert.HasRoute(Routes, "/home/index/Other_Page", pageRoute);
-        }
-
-        [TestMethod]
-        public void EmptyUrShouldRedirectToMainPage()
-        {
-            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect"};
-            RouteAssert.HasRoute(Routes, "/", mainPageRoute);
-        }
-
-        [TestMethod]
-        public void WrongHomeActionShouldRedirectToMainPage()
-        {
-            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };
-            RouteAssert.HasRoute(Routes, "/Home/asdf", mainPageRoute);
-        }
-
-        [TestMethod]
-        public void WrongControllerShouldRedirectToMainPage()
-        {
-            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };
-            RouteAssert.HasRoute(Routes, "/Hom", mainPageRoute);
-        }
-
-        [TestMethod]
-        public void EditUrlShouldRoute()
-        {
-            var route = new { controller = "Home", action = "Edit", id = "Main_Page" };
-            RouteAssert.HasRoute(Routes, "/home/edit/Main_Page", route);
-        }
-
-        [TestMethod]
-        public void SaveUrlShouldRoute()
-        {
-            var route = new { controller = "Home", action = "Save", id = "Main_Page" };
-            RouteAssert.HasRoute(Routes, "/home/save/Main_Page", route);
-        }
-    }
-
-
-    [TestClass]
     public class HomeControllerTest
     {
         private IArticleRepository repository;
@@ -111,9 +48,20 @@ namespace Mediane.Tests.Controllers
             var result = controller.Redirect() as RedirectToRouteResult;
 
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.Permanent);
+            //Assert.IsTrue(result.Permanent);
             Assert.AreEqual("Home", result.RouteName);
         }
+
+        [TestMethod]
+        public void NullIndexIdShouldRedirectToMain()
+        {
+            var result = controller.Index(null) as RedirectToRouteResult;
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Home", result.RouteValues["controller"]);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.AreEqual("Main_Page", result.RouteValues["Id"]);
+        }
+
 
         [TestMethod]
         public void About()

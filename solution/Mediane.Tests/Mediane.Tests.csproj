@@ -59,6 +59,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Extensions" />
@@ -130,6 +131,9 @@
       <Private>True</Private>
       <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
+    <Reference Include="WebDriver">
+      <HintPath>..\packages\Selenium.WebDriver.2.32.1\lib\net40\WebDriver.dll</HintPath>
+    </Reference>
     <Reference Include="Xipton.Razor, Version=2.5.0.0, Culture=neutral, PublicKeyToken=563e02c711ac8b7e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RazorMachine.2.5\lib\net40\Xipton.Razor.dll</HintPath>
@@ -142,8 +146,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\RoutingTest.cs" />
     <Compile Include="DomainModel\ArticleRepositoryTest.cs" />
     <Compile Include="DomainModel\UnitTest1.cs" />
+    <Compile Include="Functional\HomePage.cs" />
+    <Compile Include="Functional\HomePageTest.cs" />
     <Compile Include="Models\ContentModelTest.cs" />
     <Compile Include="Models\FakeContentModelRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

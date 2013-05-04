@@ -99,6 +99,16 @@ namespace RazorMachineFakes
             return new FakeBeginForm(actionName, controllerName, method);
         }
 
+        public static FakeBeginForm BeginForm(
+            string actionName,
+            string controllerName,
+            object routeValues,
+            FormMethod method,
+            object htmlAttributes)
+        {
+            return new FakeBeginForm(actionName, controllerName, method);
+        }
+
         public static LiteralString TextArea(
             string name, string value, int nrows = 20, int ncolumns = 60, object htmlAttributes = null)
         {

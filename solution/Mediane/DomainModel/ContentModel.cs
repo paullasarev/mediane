@@ -9,7 +9,7 @@ namespace Mediane.DomainModel
     {
         public string Title { get; private set; }
 
-        protected Article(string title)
+        public Article(string title)
         {
             this.Title = title.Trim();
         }

@@ -11,7 +11,7 @@ namespace Mediane.Controllers
     {
         public ActionResult Redirect()
         {
-            return RedirectToRoutePermanent("Home", new { Controller = "Home", Action = "Index", Id = "Main_Page"});
+            return RedirectToRoute("Home", new { Controller = "Home", Action = "Index", Id = "Main_Page"});
         }
     }
 
@@ -29,11 +29,16 @@ namespace Mediane.Controllers
             repository = RepositoryTable.Repositories.Locate<IArticleRepository>();
         }
 
-        public ActionResult Index(string id = "")
+        public ActionResult Index(string id)
         {
+            if (id == null)
+            {
+                return RedirectToAction("Index", "Home", new { Id = "Main_Page" });
+            }
+
             var model = repository.Load(id);
 
-            return View(model);
+            return View("Index", model);
         }
 
         public ActionResult Edit(string id)

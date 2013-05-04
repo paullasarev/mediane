@@ -19,7 +19,7 @@
 }
 
 <h2>@Model.Title</h2>
-@using (Html.BeginForm("Save", "Home", FormMethod.Post, new {id="ContentEdit"}))
+@using (Html.BeginForm("Save", "Home", new { id = Model.Title }, FormMethod.Post, new { id = "ContentEdit" }))
 {
     @Html.TextArea("Content", Model.Content, 20, 80, null)
     <br />

@@ -6,22 +6,15 @@ using System.Text;
 
 namespace Mediane.Tests.Models
 {
-    class ArticleImpl : Article
-    {
-        public ArticleImpl(string id)
-            : base(id)
-        {
-        }
-    }
-
     class FakeArticleRepository : IArticleRepository
     {
         protected Dictionary<string, Article> Models = new Dictionary<string, Article>();
 
         protected Article Create(string id)
         {
-            var model = new ArticleImpl(id);
+            var model = new Article(id);
             model.Content = "New page template";
+            model.IsNew = true;
             return model;
         }
 
@@ -40,8 +33,8 @@ namespace Mediane.Tests.Models
 
         public void Save(Article model)
         {
+            model.IsNew = false;
             Models[model.Title] = model;
-
         }
     }
 }

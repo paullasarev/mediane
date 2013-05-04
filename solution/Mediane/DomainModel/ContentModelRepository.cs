@@ -6,14 +6,6 @@ using System.Web;
 
 namespace Mediane.DomainModel
 {
-    class ArticleImpl : Article
-    {
-        public ArticleImpl(string title)
-            : base(title)
-        {
-        }
-    }
-
     [PetaPoco.TableName("articles")]
     [PetaPoco.PrimaryKey("ArticleId")]
     public class ArticleDb
@@ -53,7 +45,7 @@ namespace Mediane.DomainModel
 
         public Article Create(string title)
         {
-            var model = new ArticleImpl(title);
+            var model = new Article(title);
             model.IsNew = true;
             model.Content = "New page template";
             return model;
@@ -61,7 +53,7 @@ namespace Mediane.DomainModel
 
         public Article Load(string title)
         {
-            ArticleImpl a = new ArticleImpl(title);
+            Article a = new Article(title);
             ArticleDb aDb = Db.SingleOrDefault<ArticleDb>(Query.ArticleByTitle, a.Title);
             if (aDb == null)
             {
