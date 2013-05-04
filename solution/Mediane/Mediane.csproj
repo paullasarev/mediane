@@ -190,6 +190,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DomainModel\ContentModelRepository.cs" />
     <Compile Include="DomainModel\IContentModelRepository.cs" />
+    <Compile Include="DomainModel\QueryObject.cs" />
     <Compile Include="DomainModel\RepositoryTable.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">

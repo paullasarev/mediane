@@ -15,18 +15,10 @@ namespace Mediane.DomainModel
         public string Content { get; set; }
     }
 
-    class QueryBuilder
-    {
-        public string ArticleByTitle
-        {
-            get { return "SELECT * FROM ARTICLES WHERE Title=@0"; }
-        }
-    }
-
     public class ArticleRepository : IArticleRepository
     {
         private PetaPoco.Database Db;
-        private QueryBuilder Query = new QueryBuilder();
+        private QueryObject Query = new QueryObject();
 
         public ArticleRepository(PetaPoco.Database Db)
         {
