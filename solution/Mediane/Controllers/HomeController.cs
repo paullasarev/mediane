@@ -62,7 +62,8 @@ namespace Mediane.Controllers
             return View();
         }
 
-
+        [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Save(string id, string Content, string action)
         {
             var model = repository.Load(id);

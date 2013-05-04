@@ -46,6 +46,27 @@ namespace Mediane.Tests.Controllers
         }
 
         [TestMethod]
+        public void WrongHomeAction2ShouldRedirectToMainPage()
+        {
+            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };
+            RouteAssert.HasRoute(Routes, "/Home", mainPageRoute);
+        }
+
+        [TestMethod]
+        public void WrongHomeAction3ShouldRedirectToMainPage()
+        {
+            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };
+            RouteAssert.HasRoute(Routes, "/Home/Index", mainPageRoute);
+        }
+
+        [TestMethod]
+        public void WrongHomeAction4ShouldRedirectToMainPage()
+        {
+            var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };
+            RouteAssert.HasRoute(Routes, "/Home/Edit", mainPageRoute);
+        }
+
+        [TestMethod]
         public void WrongControllerShouldRedirectToMainPage()
         {
             var mainPageRoute = new { controller = "RootRedirector", action = "Redirect" };

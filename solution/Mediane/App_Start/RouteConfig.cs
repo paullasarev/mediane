@@ -20,17 +20,21 @@ namespace Mediane
             );
 
             routes.MapRoute(
+                name: "HomeHome",
+                url: "Home",
+                defaults: new { controller = "RootRedirector", action = "Redirect" }
+            );
+
+            routes.MapRoute(
                 name: "HomeIndex",
                 url: "Home/Index",
                 defaults: new { controller = "RootRedirector", action = "Redirect" }
-                //constraints: new { controller = "Home", action =  "Index|Edit|Save" }
             );
 
             routes.MapRoute(
                 name: "HomeEdit",
                 url: "Home/Edit",
                 defaults: new { controller = "RootRedirector", action = "Redirect" }
-                //constraints: new { controller = "Home", action =  "Index|Edit|Save" }
             );
 
             routes.MapRoute(
