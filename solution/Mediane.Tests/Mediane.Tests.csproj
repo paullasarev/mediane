@@ -148,6 +148,7 @@
   <ItemGroup>
     <Compile Include="Controllers\RoutingTest.cs" />
     <Compile Include="DomainModel\ArticleRepositoryTest.cs" />
+    <Compile Include="DomainModel\ContentRenderTest.cs" />
     <Compile Include="DomainModel\UnitTest1.cs" />
     <Compile Include="Functional\HomePage.cs" />
     <Compile Include="Functional\HomePageTest.cs" />

@@ -54,13 +54,6 @@ namespace Mediane.Tests.Models
             Assert.AreEqual(content, model.Content);
         }
 
-        [TestMethod]
-        public void RenderedShouldProduceParagraphTag()
-        {
-            model.Content = "one paragraph";
-            Utils.XmlAssert.IsEqual(" <p>one paragraph</p>\n ", model.Rendered);
-        }
-
     
     }
 }

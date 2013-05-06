@@ -13,8 +13,8 @@ namespace Mediane.Tests.Utils
         {
             XmlAssertion.AssertXmlEquals(
                 new XmlDiff(
-                    new XmlInput(expect),
-                    new XmlInput(actual),
+                    new XmlInput("<testroot>" + expect + "</testroot>"),
+                    new XmlInput("<testroot>" + actual + "</testroot>"),
                     new DiffConfiguration("XmlUnit", System.Xml.WhitespaceHandling.None)
                     ));
         }

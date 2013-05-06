@@ -37,7 +37,7 @@ namespace Mediane.DomainModel
 
         public Article Create(string title)
         {
-            var model = new Article(title);
+            var model = new Article(title, this);
             model.IsNew = true;
             model.Content = "New page template";
             return model;
@@ -45,7 +45,7 @@ namespace Mediane.DomainModel
 
         public Article Load(string title)
         {
-            Article a = new Article(title);
+            Article a = new Article(title, this);
             ArticleDb aDb = Db.SingleOrDefault<ArticleDb>(Query.ArticleByTitle, a.Title);
             if (aDb == null)
             {

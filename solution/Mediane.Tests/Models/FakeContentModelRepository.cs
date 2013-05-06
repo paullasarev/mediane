@@ -12,7 +12,7 @@ namespace Mediane.Tests.Models
 
         protected Article Create(string id)
         {
-            var model = new Article(id);
+            var model = new Article(id, this);
             model.Content = "New page template";
             model.IsNew = true;
             return model;

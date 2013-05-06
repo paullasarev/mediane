@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>dbup-sqlce</id>
+    <version>2.0.119</version>
+    <title>DbUp SQL CE Support</title>
+    <authors>Paul Stovell,  Jim Burger,  Jake Ginnivan,  Damian Maclennan</authors>
+    <owners>Paul Stovell,  Jim Burger,  Jake Ginnivan,  Damian Maclennan</owners>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>http://dbup.github.com/</projectUrl>
+    <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SqlCe support.</description>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="SqlServerCompact" version="4.0.8482.1" />
+      <dependency id="DbUp" version="2.0.119" />
+    </dependencies>
+  </metadata>
+</package>
