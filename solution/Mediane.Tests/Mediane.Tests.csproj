@@ -33,6 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DbUp">
+      <HintPath>..\packages\dbup.2.0.119\lib\NET35\DbUp.dll</HintPath>
+    </Reference>
+    <Reference Include="DbUp.SqlCe">
+      <HintPath>..\packages\dbup-sqlce.2.0.119\lib\NET35\DbUp.SqlCe.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Web.Mvc">
@@ -59,6 +65,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -149,7 +159,7 @@
     <Compile Include="Controllers\RoutingTest.cs" />
     <Compile Include="DomainModel\ArticleRepositoryTest.cs" />
     <Compile Include="DomainModel\ContentRenderTest.cs" />
-    <Compile Include="DomainModel\UnitTest1.cs" />
+    <Compile Include="DomainModel\InitDbTest.cs" />
     <Compile Include="Functional\HomePage.cs" />
     <Compile Include="Functional\HomePageTest.cs" />
     <Compile Include="Models\ContentModelTest.cs" />
@@ -162,7 +172,9 @@
     <Compile Include="Views\InfrastructureTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.config" />
+    <Content Include="App.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="razormachine.readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +193,11 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /b /y $(SolutionDir)\Mediane\App_Data\MedianeDb.sdf $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>copy /b /y $(SolutionDir)\Mediane\App_Data\MedianeDb.sdf $(TargetDir)
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

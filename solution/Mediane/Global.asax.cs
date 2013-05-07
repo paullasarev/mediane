@@ -24,6 +24,8 @@ namespace Mediane
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
+
+            DbConfig.InitOrUpgrade();
             RepositoryConfig.RegisterRepositories(RepositoryTable.Repositories);
         }
     }

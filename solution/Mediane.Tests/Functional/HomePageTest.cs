@@ -13,30 +13,20 @@ namespace Mediane.Tests.Functional
         static IWebDriver Driver;
         const string BaseUrl = "http://localhost:56773/";
         const string MainPageId = "Main_Page";
-        static QueryObject queryObject = new QueryObject();
-        static string ConnectionString;
-        private static string ProviderName = "System.Data.SqlServerCe.4.0";
-
-        static HomePageTest()
-        {
-            var solutionFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)));
-            ConnectionString = "DataSource=" + Path.Combine(solutionFolder, "Mediane", "App_Data", "MedianeDb.sdf");
-        }
-
-        public static void ClearDb()
-        {
-            using (var db = new PetaPoco.Database(ConnectionString, ProviderName))
-            {
-                db.Execute(queryObject.ClearAll);
-            }
-        }
+        const string DbName = "MedianeDb.sdf";
 
         [ClassInitialize()]
         public static void Initialize(TestContext testContext)
         {
+            var solutionFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)));
+
+            string dbFileName = Path.Combine(solutionFolder, "Mediane", "App_Data", DbName);
+            File.Delete(dbFileName);
+            var initDb = new InitDb(DbName, new MedianeSql(), dbFileName);
+            initDb.CreateDbIfNotExist();
+
             Driver = new FirefoxDriver();
             Driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-            ClearDb();
         }
 
         [ClassCleanup()]

@@ -18,7 +18,7 @@ namespace Mediane.DomainModel
     public class ArticleRepository : IArticleRepository
     {
         private PetaPoco.Database Db;
-        private QueryObject Query = new QueryObject();
+        private MedianeSql Query = new MedianeSql();
 
         public ArticleRepository(PetaPoco.Database Db)
         {

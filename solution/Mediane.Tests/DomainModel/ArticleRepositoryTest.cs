@@ -57,14 +57,21 @@ namespace Mediane.Tests.DomainModel
             set {testContextInstance = value;}
         }
 
-        private static string ConnectionString = "DataSource=Temp.sdf";
-        private static string ProviderName = "System.Data.SqlServerCe.4.0";
+        private const string DbName = "Temp.sdf";
+        private static string ConnectionString;
+        private static string ProviderName ;
         private static PetaPoco.Database Db;
 
         [ClassInitialize]
         public static void FixtureSetUp(TestContext context)
         {
-            File.Copy("..\\..\\..\\Mediane\\App_Data\\MedianeDb.sdf", "Temp.sdf", true);
+            //File.Copy("..\\..\\..\\Mediane\\App_Data\\MedianeDb.sdf", "Temp.sdf", true);
+            File.Delete(DbName);
+            InitDb initDb = new InitDb(DbName, new MedianeSql(), DbName);
+            ConnectionString = initDb.GetConnectionString();
+            ProviderName = initDb.GetProviderName();
+            initDb.CreateDbIfNotExist();
+
             Db = new PetaPoco.Database(ConnectionString, ProviderName);
         }
 
@@ -119,7 +126,7 @@ namespace Mediane.Tests.DomainModel
                 Db.Insert(a);
                 Assert.Fail();
             }
-            catch(Exception e)
+            catch
             {
             }
         }
