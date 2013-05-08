@@ -29,6 +29,7 @@ GO
 
                 scripts.Add(new DbUp.Engine.SqlScript("Init001_Create_Tables", Init001_Create_Tables));
                 scripts.Add(new DbUp.Engine.SqlScript("Init002_Add_User_Table", Init002_Add_User_Table));
+                scripts.Add(new DbUp.Engine.SqlScript("Init003_Add_UserId_Column", Init003_Add_UserId_Column));
 
                 return scripts.ToArray();
             }
@@ -59,6 +60,12 @@ ALTER TABLE [Users] ADD CONSTRAINT [PK__Users] PRIMARY KEY ([Username]);
 GO
 ";
 
+        public readonly string Init003_Add_UserId_Column =
+@"
+ALTER TABLE [Users] ADD [UserId] int IDENTITY (1,1);
+GO
+";
+
         public readonly string AddPage1 = 
             "INSERT INTO Articles (Title, Content) VALUES ('Page 1', 'Content of Page 1')";
 
@@ -67,6 +74,9 @@ GO
 
         public readonly string UserByUsername =
             "SELECT * FROM [Users] WHERE [Username]=@0";
+        
+        public readonly string UserByUserId =
+            "SELECT * FROM [Users] WHERE [UserId]=@0";
     }
 
 }

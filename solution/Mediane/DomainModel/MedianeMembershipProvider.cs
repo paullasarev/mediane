@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using WebMatrix.WebData;
 
 namespace Mediane.DomainModel
@@ -158,9 +159,19 @@ namespace Mediane.DomainModel
             throw new NotImplementedException();
         }
 
+        public override bool HasLocalAccount(int id)
+        {
+            return repository.GetUserById(id) != null;
+        }
+
         public override System.Web.Security.MembershipUser GetUser(string username, bool userIsOnline)
         {
-            throw new NotImplementedException();
+            int providerUserKey = repository.GetUserId(username);
+            return new MembershipUser(this.Name, username, providerUserKey, "", "", "", true, false,
+                new DateTime(2013, 1, 1), DateTime.Now, DateTime.Now,
+                new DateTime(2013, 1, 1), new DateTime(1, 1, 1));
+            //var user = new MedianeMembershipUser(repository, username);
+            //return user;
         }
 
         public override System.Web.Security.MembershipUser GetUser(object providerUserKey, bool userIsOnline)
@@ -237,5 +248,19 @@ namespace Mediane.DomainModel
 
             return repository.Validate(username, password);
         }
+    }
+
+    public class MedianeMembershipUser : System.Web.Security.MembershipUser
+    {
+        private IUserRepository repository;
+
+        public MedianeMembershipUser(IUserRepository repository, string username)
+            : base("MedianeMembershipUser", username, null, "", "", "", true, false, 
+                new DateTime(2013,1,1), DateTime.Now, DateTime.Now,
+                new DateTime(2013,1,1), new DateTime(1,1,1) )
+        {
+            this.repository = repository;
+        }
+
     }
 }

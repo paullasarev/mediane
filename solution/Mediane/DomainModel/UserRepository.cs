@@ -11,6 +11,8 @@ namespace Mediane.DomainModel
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        [PetaPoco.ResultColumn]
+        public int UserId { get; set; }
     }
 
     public class UserRepository : IUserRepository
@@ -48,5 +50,28 @@ namespace Mediane.DomainModel
 
             Db.Insert(m);
         }
+
+        public int GetUserId(string username)
+        {
+            UserDb user = Db.SingleOrDefault<UserDb>(Query.UserByUsername, username);
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return user.UserId;
+        }
+
+        public string GetUserById(int id)
+        {
+            UserDb user = Db.SingleOrDefault<UserDb>(Query.UserByUserId, id);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return user.Username;
+        }
+
     }
 }

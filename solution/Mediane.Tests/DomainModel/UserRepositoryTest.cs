@@ -134,12 +134,43 @@ namespace Mediane.Tests.DomainModel
         {
             var repo = new UserRepository(ConnectionString, ProviderName);
 
-            string username = "user6";
-            string password = "asdf6";
+            string username = "user7";
+            string password = "asdf7";
 
             repo.Create(username, password);
 
-            Assert.IsFalse(repo.Validate(username, "asdf7"));
+            Assert.IsFalse(repo.Validate(username, "asdf8"));
         }
+
+        [TestMethod]
+        public void GetUserIdShouldReturnUserId()
+        {
+            var repo = new UserRepository(ConnectionString, ProviderName);
+
+            string username = "user9";
+            string password = "asdf9";
+
+            repo.Create(username, password);
+
+            int userId = repo.GetUserId(username);
+            Assert.IsTrue(userId > 0);
+        }
+
+        [TestMethod]
+        public void GetUserByIdShouldReturnUsername()
+        {
+            var repo = new UserRepository(ConnectionString, ProviderName);
+
+            string username = "user10";
+            string password = "asdf10";
+
+            repo.Create(username, password);
+
+            int userId = repo.GetUserId(username);
+
+            string name = repo.GetUserById(userId);
+            Assert.AreEqual(username, name);
+        }
+
     }
 }

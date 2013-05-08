@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using WebMatrix.WebData;
 
 namespace Mediane
 {
@@ -27,6 +28,7 @@ namespace Mediane
 
             DbConfig.InitOrUpgrade();
             RepositoryConfig.RegisterRepositories(RepositoryTable.Repositories);
+            WebSecurity.InitializeDatabaseConnection("MedianeDb", "Users", "UserId", "Username", autoCreateTables: false);
         }
     }
 }

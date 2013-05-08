@@ -14,7 +14,7 @@ using Mediane.Models;
 namespace Mediane.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
+    //[InitializeSimpleMembership]
     public class AccountController : Controller
     {
         //
@@ -132,7 +132,8 @@ namespace Mediane.Controllers
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : "";
-            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+            var id = WebSecurity.GetUserId(User.Identity.Name);
+            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(id);
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }

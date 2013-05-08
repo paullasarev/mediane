@@ -10,5 +10,8 @@ namespace Mediane.DomainModel
     {
         bool Validate(string username, string password);
         void Create(string username, string password);
+        int GetUserId(string username);
+
+        string GetUserById(int id);
     }
 }

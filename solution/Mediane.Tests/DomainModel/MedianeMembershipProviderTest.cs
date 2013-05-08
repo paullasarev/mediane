@@ -38,6 +38,16 @@ namespace Mediane.Tests.DomainModel
 
             Assert.IsTrue(provider.ValidateUser("user", "asdf"));
         }
+
+        [TestMethod]
+        public void GetUserShouldBuildMembership()
+        {
+            string username = "administrator";
+            
+            MembershipUser user = provider.GetUser(username, true);
+            
+            Assert.AreEqual(username, user.UserName);
+        }
     }
 
     [TestClass]
