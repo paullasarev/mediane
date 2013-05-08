@@ -65,7 +65,6 @@ namespace Mediane.Tests.DomainModel
         [ClassInitialize]
         public static void FixtureSetUp(TestContext context)
         {
-            //File.Copy("..\\..\\..\\Mediane\\App_Data\\MedianeDb.sdf", "Temp.sdf", true);
             File.Delete(DbName);
             InitDb initDb = new InitDb(DbName, new MedianeSql(), DbName);
             ConnectionString = initDb.GetConnectionString();

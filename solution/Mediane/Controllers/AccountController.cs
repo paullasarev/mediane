@@ -263,26 +263,26 @@ namespace Mediane.Controllers
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
-                using (UsersContext db = new UsersContext())
-                {
-                    UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
-                    // Check if user already exists
-                    if (user == null)
-                    {
-                        // Insert name into the profile table
-                        db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
-                        db.SaveChanges();
+                //using (UsersContext db = new UsersContext())
+                //{
+                //    UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
+                //    // Check if user already exists
+                //    if (user == null)
+                //    {
+                //        // Insert name into the profile table
+                //        db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
+                //        db.SaveChanges();
 
-                        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-                        OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
+                //        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
+                //        OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
 
-                        return RedirectToLocal(returnUrl);
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
-                    }
-                }
+                //        return RedirectToLocal(returnUrl);
+                //    }
+                //    else
+                //    {
+                //        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                //    }
+                //}
             }
 
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(provider).DisplayName;

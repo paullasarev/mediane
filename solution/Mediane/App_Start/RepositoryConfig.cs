@@ -11,6 +11,7 @@ namespace Mediane
         public static void RegisterRepositories(RepositoryTable repository)
         {
             repository.Register<IArticleRepository>(new ArticleRepository("MedianeDb"));
+            repository.Register<IUserRepository>(new UserRepository("MedianeDb"));
         }
     }
 }

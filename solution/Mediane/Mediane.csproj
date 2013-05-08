@@ -213,8 +213,12 @@
     <Compile Include="DomainModel\ContentModelRepository.cs" />
     <Compile Include="DomainModel\IContentModelRepository.cs" />
     <Compile Include="DomainModel\InitDb.cs" />
+    <Compile Include="DomainModel\IUserRepository.cs" />
+    <Compile Include="DomainModel\MedianeMembershipProvider.cs" />
+    <Compile Include="DomainModel\MedianeRoleProvider.cs" />
     <Compile Include="DomainModel\QueryObject.cs" />
     <Compile Include="DomainModel\RepositoryTable.cs" />
+    <Compile Include="DomainModel\UserRepository.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

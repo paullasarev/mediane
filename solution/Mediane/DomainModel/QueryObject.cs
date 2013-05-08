@@ -7,31 +7,19 @@ namespace Mediane.DomainModel
 {
     public class MedianeSql
     {
-        public string ArticleByTitle
-        {
-            get { return "SELECT * FROM ARTICLES WHERE Title=@0"; }
-        }
-
-        public string ClearAll
-        {
-            get
-            {
-                return
+        public readonly string ClearAll =
 @"
 DELETE FROM articles;
+GO
+DELETE FROM users;
+GO
 ";
-            }
-        }
 
-        public string SchemaVersions
-        {
-            get { return "SELECT * from SchemaVersions AS sv ORDER BY sv.Applied"; }
-        }
+        public readonly string SchemaVersions =
+            "SELECT * from SchemaVersions AS sv ORDER BY sv.Applied";
 
-        public string SchemaVersionsCount
-        {
-            get { return "SELECT COUNT(*) FROM SchemaVersions"; }
-        }
+        public readonly string SchemaVersionsCount =
+            "SELECT COUNT(*) FROM SchemaVersions";
 
         public DbUp.Engine.SqlScript[] InitScripts
         {
@@ -40,16 +28,13 @@ DELETE FROM articles;
                 var scripts = new List<DbUp.Engine.SqlScript>();
 
                 scripts.Add(new DbUp.Engine.SqlScript("Init001_Create_Tables", Init001_Create_Tables));
+                scripts.Add(new DbUp.Engine.SqlScript("Init002_Add_User_Table", Init002_Add_User_Table));
 
                 return scripts.ToArray();
             }
         }
 
-        public string Init001_Create_Tables
-        {
-            get
-            {
-                return
+        public readonly string Init001_Create_Tables =
 @"
 CREATE TABLE [Articles] (
   [ArticleId] bigint NOT NULL  IDENTITY (1,1)
@@ -62,16 +47,26 @@ GO
 CREATE UNIQUE INDEX [ArticleTitles] ON [Articles] ([Title] ASC);
 GO
 ";
-            }
-        }
 
-        public string AddPage1
-        {
-            get
-            {
-                return "INSERT INTO Articles (Title, Content) VALUES ('Page 1', 'Content of Page 1')";
-            }
-        }
+        public readonly string Init002_Add_User_Table =
+@"
+CREATE TABLE [Users] (
+  [Username] nvarchar(50) NOT NULL
+, [Password] nvarchar(50) NOT NULL
+);
+GO
+ALTER TABLE [Users] ADD CONSTRAINT [PK__Users] PRIMARY KEY ([Username]);
+GO
+";
+
+        public readonly string AddPage1 = 
+            "INSERT INTO Articles (Title, Content) VALUES ('Page 1', 'Content of Page 1')";
+
+        public readonly string ArticleByTitle =
+            "SELECT * FROM [Articles] WHERE Title=@0";
+
+        public readonly string UserByUsername =
+            "SELECT * FROM [Users] WHERE [Username]=@0";
     }
 
 }

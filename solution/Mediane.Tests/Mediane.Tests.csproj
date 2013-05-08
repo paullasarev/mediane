@@ -144,6 +144,14 @@
     <Reference Include="WebDriver">
       <HintPath>..\packages\Selenium.WebDriver.2.32.1\lib\net40\WebDriver.dll</HintPath>
     </Reference>
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.20710.0\lib\net40\WebMatrix.WebData.dll</HintPath>
+    </Reference>
     <Reference Include="Xipton.Razor, Version=2.5.0.0, Culture=neutral, PublicKeyToken=563e02c711ac8b7e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RazorMachine.2.5\lib\net40\Xipton.Razor.dll</HintPath>
@@ -159,7 +167,10 @@
     <Compile Include="Controllers\RoutingTest.cs" />
     <Compile Include="DomainModel\ArticleRepositoryTest.cs" />
     <Compile Include="DomainModel\ContentRenderTest.cs" />
+    <Compile Include="DomainModel\FakeUserRepository.cs" />
     <Compile Include="DomainModel\InitDbTest.cs" />
+    <Compile Include="DomainModel\MedianeMembershipProviderTest.cs" />
+    <Compile Include="DomainModel\UserRepositoryTest.cs" />
     <Compile Include="Functional\HomePage.cs" />
     <Compile Include="Functional\HomePageTest.cs" />
     <Compile Include="Models\ContentModelTest.cs" />
