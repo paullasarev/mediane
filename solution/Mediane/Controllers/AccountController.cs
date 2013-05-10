@@ -286,7 +286,7 @@ namespace Mediane.Controllers
                 //    }
                 //}
                 var userRepository = RepositoryTable.Repositories.Locate<IUserRepository>();
-                if (userRepository.UserExist(model.UserName))
+                if (!userRepository.UserExist(model.UserName))
                 {
                     userRepository.CreateUser(model.UserName);
                     OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
