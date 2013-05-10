@@ -9,3 +9,5 @@ TestResults
 /solution/Backup
 _lib
 _UpgradeReport_Files
+/solution/Mediane/App_Data/MedianeDb.log
+/solution/Mediane/App_Data/MedianeDb.sdf.0

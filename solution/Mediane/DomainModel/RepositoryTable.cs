@@ -29,5 +29,16 @@ namespace Mediane.DomainModel
             System.Int32 key = typeof(T1).GetHashCode();
             Repos[key] = repository;
         }
+
+        public void Clear()
+        {
+            Repos.Clear();
+        }
+
+        public void Clear<T1>()
+        {
+            System.Int32 key = typeof(T1).GetHashCode();
+            Repos.Remove(key);
+        }
     }
 }
