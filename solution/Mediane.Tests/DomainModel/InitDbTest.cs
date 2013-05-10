@@ -5,6 +5,7 @@ using System.Data.SqlServerCe;
 using System.IO;
 using Mediane.DomainModel;
 using System.Collections.Generic;
+using System.Web.Helpers;
 
 namespace Mediane.Tests.DomainModel
 {
@@ -95,5 +96,55 @@ namespace Mediane.Tests.DomainModel
             }
         }
 
+        [TestMethod]
+        public void ShouldCreateSimpleMembersipProviderTables()
+        {
+            InitDbInctance.CreateDbIfNotExist();
+
+            using (var db = new PetaPoco.Database(InitDbInctance.GetConnectionString(), InitDbInctance.GetProviderName()))
+            {
+                Assert.IsFalse(InitDbInctance.ColumnExist(db, "Users", "Password"));
+                Assert.IsTrue(InitDbInctance.ColumnExist(db, "Users", "UserId"));
+                Assert.IsTrue(InitDbInctance.ColumnExist(db, "Users", "UserName"));
+
+                Assert.IsTrue(InitDbInctance.TableExist(db, "webpages_Membership"));
+                Assert.IsTrue(InitDbInctance.TableExist(db, "webpages_OAuthMembership"));
+                Assert.IsTrue(InitDbInctance.TableExist(db, "webpages_OAuthToken"));
+            }
+        }
+
+        [TestMethod]
+        public void ShouldCreateSimpleRoleProviderTables()
+        {
+            InitDbInctance.CreateDbIfNotExist();
+
+            using (var db = new PetaPoco.Database(InitDbInctance.GetConnectionString(), InitDbInctance.GetProviderName()))
+            {
+                Assert.IsTrue(InitDbInctance.TableExist(db, "webpages_Roles"));
+                Assert.IsTrue(InitDbInctance.TableExist(db, "webpages_UsersInRoles"));
+            }
+        }
+
+        [TestMethod]
+        public void ShouldCreateAdministratorLocalAccount()
+        {
+            InitDbInctance.CreateDbIfNotExist();
+
+            using (var db = new PetaPoco.Database(InitDbInctance.GetConnectionString(), InitDbInctance.GetProviderName()))
+            {
+                string username = "administrator";
+                string password = "root";
+                
+                UserDb userDb = db.SingleOrDefault<UserDb>(Sql.UserByUsername, username);
+                Assert.AreEqual(username, userDb.UserName);
+                var userId = userDb.UserId;
+
+                MembershipDb membershipDb = db.SingleOrDefault<MembershipDb>(userId);
+                Assert.IsTrue(Crypto.VerifyHashedPassword(membershipDb.Password, password));
+                Assert.IsTrue(membershipDb.IsConfirmed);
+                Assert.IsTrue(membershipDb.CreateDate.HasValue);
+                Assert.AreEqual(DateTime.Now.Date, membershipDb.CreateDate.Value.Date);
+            }
+        }
     }
 }

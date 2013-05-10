@@ -85,5 +85,17 @@ namespace Mediane.DomainModel
         {
             return "System.Data.SqlServerCe.4.0";
         }
+
+        public bool TableExist(PetaPoco.Database db, string tableName)
+        {
+            bool exist = db.ExecuteScalar<bool>(sql.TableExist, tableName);
+            return exist;
+        }
+
+        public bool ColumnExist(PetaPoco.Database db, string tableName, string columnName)
+        {
+            bool exist = db.ExecuteScalar<bool>(sql.ColumnExist, tableName, columnName);
+            return exist;
+        }
     }
 }

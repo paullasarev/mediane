@@ -56,31 +56,31 @@ namespace Mediane.Tests.DomainModel
         {
             string username = "user1";
             var m = new UserDb();
-            m.Username = username;
-            m.Password = "asdf";
+            m.UserName = username;
 
             Db.Insert(m);
 
-            UserDb m2 = Db.SingleOrDefault<UserDb>((object)username);
+            UserDb m2 = Db.SingleOrDefault<UserDb>(m.UserId);
 
-            Assert.AreEqual(m.Username, m2.Username);
-            Assert.AreEqual(m.Password, m2.Password);
+            Assert.AreEqual(m.UserName, m2.UserName);
         }
 
         [TestMethod]
-        public void CreateShouldAddToUserTable()
+        public void CreateShouldAddToUserAndMembershipTable()
         {
             var repo = new UserRepository(ConnectionString, ProviderName);
 
             string username = "user2";
             string password = "asdf2";
 
-            repo.Create(username, password);
+            int userId = repo.CreateLocal(username, password);
 
-            UserDb m2 = Db.SingleOrDefault<UserDb>((object)username);
+            UserDb m2 = Db.SingleOrDefault<UserDb>(userId);
+            Assert.AreEqual(username, m2.UserName);
 
-            Assert.AreEqual(username, m2.Username);
-            Assert.AreEqual(password, m2.Password);
+            MembershipDb m3 = Db.SingleOrDefault<MembershipDb>(userId);
+            Assert.AreEqual(password, m3.Password);
+            Assert.IsTrue(m3.IsConfirmed);
         }
 
         [TestMethod]
@@ -91,11 +91,11 @@ namespace Mediane.Tests.DomainModel
             string username = "user3";
             string password = "asdf3";
 
-            repo.Create(username, password);
+            repo.CreateLocal(username, password);
 
             try
             {
-                repo.Create(username, password);
+                repo.CreateLocal(username, password);
                 Assert.Fail();
             }
             catch
@@ -111,7 +111,7 @@ namespace Mediane.Tests.DomainModel
             string username = "user4";
             string password = "asdf4";
 
-            repo.Create(username, password);
+            repo.CreateLocal(username, password);
 
             Assert.IsTrue(repo.Validate(username, password));
         }
@@ -124,7 +124,7 @@ namespace Mediane.Tests.DomainModel
             string username = "user5";
             string password = "asdf5";
 
-            repo.Create(username, password);
+            repo.CreateLocal(username, password);
 
             Assert.IsFalse(repo.Validate("user6", password));
         }
@@ -137,7 +137,7 @@ namespace Mediane.Tests.DomainModel
             string username = "user7";
             string password = "asdf7";
 
-            repo.Create(username, password);
+            repo.CreateLocal(username, password);
 
             Assert.IsFalse(repo.Validate(username, "asdf8"));
         }
@@ -150,10 +150,21 @@ namespace Mediane.Tests.DomainModel
             string username = "user9";
             string password = "asdf9";
 
-            repo.Create(username, password);
+            repo.CreateLocal(username, password);
 
             int userId = repo.GetUserId(username);
             Assert.IsTrue(userId > 0);
+        }
+
+        [TestMethod]
+        public void GetUserIdShouldReturnIvalidIdForAbsentUserName()
+        {
+            var repo = new UserRepository(ConnectionString, ProviderName);
+
+            string username = "baduser9";
+
+            int userId = repo.GetUserId(username);
+            Assert.AreEqual(-1, userId);
         }
 
         [TestMethod]
@@ -164,12 +175,25 @@ namespace Mediane.Tests.DomainModel
             string username = "user10";
             string password = "asdf10";
 
-            repo.Create(username, password);
+            repo.CreateLocal(username, password);
 
             int userId = repo.GetUserId(username);
 
             string name = repo.GetUserById(userId);
             Assert.AreEqual(username, name);
+        }
+
+        [TestMethod]
+        public void CreateUserShouldAddToUserTable()
+        {
+            var repo = new UserRepository(ConnectionString, ProviderName);
+
+            string username = "user11";
+
+            int userId = repo.CreateUser(username);
+
+            UserDb userDb = Db.SingleOrDefault<UserDb>(userId);
+            Assert.AreEqual(username, userDb.UserName);
         }
 
     }

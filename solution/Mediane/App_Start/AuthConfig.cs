@@ -12,6 +12,7 @@ namespace Mediane
     {
         public static void RegisterAuth()
         {
+            WebSecurity.InitializeDatabaseConnection("MedianeDb", "Users", "UserId", "UserName", autoCreateTables: false);
             // To let users of this site log in using their accounts from other sites such as Microsoft, Facebook, and Twitter,
             // you must update this site. For more information visit http://go.microsoft.com/fwlink/?LinkID=252166
 
@@ -23,9 +24,9 @@ namespace Mediane
             //    consumerKey: "",
             //    consumerSecret: "");
 
-            //OAuthWebSecurity.RegisterFacebookClient(
-            //    appId: "",
-            //    appSecret: "");
+            OAuthWebSecurity.RegisterFacebookClient(
+                appId: "109984902540201",
+                appSecret: "1c6152c0e5b75295cd48909dccfaf3cb");
 
             //OAuthWebSecurity.RegisterGoogleClient();
         }

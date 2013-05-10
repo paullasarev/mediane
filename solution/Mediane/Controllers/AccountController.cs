@@ -10,6 +10,7 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using Mediane.Filters;
 using Mediane.Models;
+using Mediane.DomainModel;
 
 namespace Mediane.Controllers
 {
@@ -284,6 +285,19 @@ namespace Mediane.Controllers
                 //        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
                 //    }
                 //}
+                var userRepository = RepositoryTable.Repositories.Locate<IUserRepository>();
+                if (userRepository.UserExist(model.UserName))
+                {
+                    userRepository.CreateUser(model.UserName);
+                    OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
+                    OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
+
+                    return RedirectToLocal(returnUrl);
+                }
+                else
+                {
+                    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
+                }
             }
 
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(provider).DisplayName;

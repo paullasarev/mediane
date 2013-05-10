@@ -6,7 +6,7 @@ using System.Web.Security;
 
 namespace Mediane.Tests.DomainModel
 {
-    [TestClass]
+    //[TestClass]
     public class MedianeMembershipProviderTest
     {
         IUserRepository repository = new FakeUserRepository();
@@ -50,7 +50,7 @@ namespace Mediane.Tests.DomainModel
         }
     }
 
-    [TestClass]
+    //[TestClass]
     public class MedianeRoleProviderTest
     {
         [TestMethod]

@@ -2,17 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 
 namespace Mediane.DomainModel
 {
     [PetaPoco.TableName("Users")]
-    [PetaPoco.PrimaryKey("Username", autoIncrement = false)]
+    [PetaPoco.PrimaryKey("UserId", autoIncrement = true)]
     public class UserDb
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        [PetaPoco.ResultColumn]
         public int UserId { get; set; }
+        public string UserName { get; set; }
+        //public string Password { get; set; }
+        //[PetaPoco.ResultColumn]
+    }
+
+    [PetaPoco.TableName("webpages_Membership")]
+    [PetaPoco.PrimaryKey("UserId", autoIncrement = false)]
+    public class MembershipDb
+    {
+        public int UserId { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public string ConfirmationToken { get; set; }
+        public bool IsConfirmed { get; set; }
+        public Nullable<System.DateTime> LastPasswordFailureDate { get; set; }
+        public int PasswordFailuresSinceLastSuccess { get; set; }
+        public string Password { get; set; }
+        public Nullable<System.DateTime> PasswordChangedDate { get; set; }
+        public string PasswordSalt { get; set; }
+        public string PasswordVerificationToken { get; set; }
+        public Nullable<System.DateTime> PasswordVerificationTokenExpirationDate { get; set; }
     }
 
     public class UserRepository : IUserRepository
@@ -32,23 +50,43 @@ namespace Mediane.DomainModel
 
         public bool Validate(string username, string password)
         {
-            UserDb user = Db.SingleOrDefault<UserDb>(Query.UserByUsername, username);
-            if (user == null)
+            var userDb = Db.SingleOrDefault<UserDb>(Query.UserByUsername, username);
+            if (userDb == null)
             {
                 return false;
             }
 
-            return user.Password == password;
+            var userId = userDb.UserId;
+
+            var membershipDb = Db.SingleOrDefault<MembershipDb>(userId);
+            if (membershipDb == null)
+            {
+                return false;
+            }
+
+            return membershipDb.Password == password;
         }
 
-        public void Create(string username, string password)
+        public int CreateLocal(string username, string password)
         {
-            var m = new UserDb() { 
-                Username = username, 
-                Password = password 
+            var userDb = new UserDb() {
+                UserName = username,
             };
 
-            Db.Insert(m);
+            Db.Insert(userDb);
+            var userId = userDb.UserId;
+
+            var membershipDb = new MembershipDb() {
+                UserId = userId,
+                IsConfirmed = true,
+                CreateDate = DateTime.Now,
+                Password = password,
+                PasswordSalt = "",
+            };
+
+            Db.Insert(membershipDb);
+
+            return userId;
         }
 
         public int GetUserId(string username)
@@ -56,7 +94,7 @@ namespace Mediane.DomainModel
             UserDb user = Db.SingleOrDefault<UserDb>(Query.UserByUsername, username);
             if (user == null)
             {
-                throw new InvalidOperationException();
+                return -1;
             }
 
             return user.UserId;
@@ -70,8 +108,25 @@ namespace Mediane.DomainModel
                 return null;
             }
 
-            return user.Username;
+            return user.UserName;
         }
 
+
+
+        public bool UserExist(string username)
+        {
+            return GetUserId(username) != -1;
+        }
+
+        public int CreateUser(string username)
+        {
+            var userDb = new UserDb()
+            {
+                UserName = username,
+            };
+
+            Db.Insert(userDb);
+            return userDb.UserId;
+        }
     }
 }

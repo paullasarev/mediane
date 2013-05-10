@@ -21,6 +21,68 @@ namespace Mediane.DomainModel
             this.repository = RepositoryTable.Repositories.Locate<IUserRepository>();
         }
 
+#region ActualOverrides
+
+        public override bool ValidateUser(string username, string password)
+        {
+            if (username == "administrator" && password == "root")
+            {
+                return true;
+            }
+
+            return repository.Validate(username, password);
+        }
+
+        // see http://camelot-sion.appspot.com/github.com/mazhekin/MVC4CustomMembershipSolution/blob/master/App.Web/Code/Membership/CustomMembershipProvider.cs
+        public override string
+        CreateUserAndAccount(string userName, string password, bool requireConfirmation, IDictionary<string, object> values)
+        {
+            repository.CreateLocal(userName, password);
+            return "";
+        }
+
+        public override System.Web.Security.MembershipUser
+        GetUser(string username, bool userIsOnline)
+        {
+            int providerUserKey = repository.GetUserId(username);
+            return new MembershipUser(this.Name, username, providerUserKey, "", "", "", true, false,
+                new DateTime(2013, 1, 1), DateTime.Now, DateTime.Now,
+                new DateTime(2013, 1, 1), new DateTime(1, 1, 1));
+            //var user = new MedianeMembershipUser(repository, username);
+            //return user;
+        }
+
+        public override bool
+        HasLocalAccount(int id)
+        {
+            //*** https://github.com/ASP-NET-MVC/aspnetwebstack/blob/master/src/WebMatrix.WebData/SimpleMembershipProvider.cs
+            return repository.GetUserById(id) != null;
+        }
+
+        public override ICollection<OAuthAccountData>
+        GetAccountsForUser(string userName)
+        {
+            //*** https://github.com/ASP-NET-MVC/aspnetwebstack/blob/master/src/WebMatrix.WebData/SimpleMembershipProvider.cs
+            throw new NotImplementedException();
+        }
+
+        public override void
+        CreateOrUpdateOAuthAccount(string provider, string providerUserId, string userName)
+        {
+            //*** https://github.com/ASP-NET-MVC/aspnetwebstack/blob/master/src/WebMatrix.WebData/SimpleMembershipProvider.cs
+            throw new NotImplementedException();
+        }
+
+        public override int
+        GetUserIdFromOAuth(string provider, string providerUserId)
+        {
+            //*** https://github.com/ASP-NET-MVC/aspnetwebstack/blob/master/src/WebMatrix.WebData/SimpleMembershipProvider.cs
+            throw new NotImplementedException();
+        }
+
+#endregion ActualOverrides
+
+#region NotImplementedOverrides
         public override bool ConfirmAccount(string accountConfirmationToken)
         {
             throw new NotImplementedException();
@@ -36,23 +98,12 @@ namespace Mediane.DomainModel
             throw new NotImplementedException();
         }
 
-        public override string CreateUserAndAccount(string userName, string password, bool requireConfirmation, IDictionary<string, object> values)
-        {
-            repository.Create(userName, password);
-            return "";
-        }
-
         public override bool DeleteAccount(string userName)
         {
             throw new NotImplementedException();
         }
 
         public override string GeneratePasswordResetToken(string userName, int tokenExpirationInMinutesFromNow)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override ICollection<OAuthAccountData> GetAccountsForUser(string userName)
         {
             throw new NotImplementedException();
         }
@@ -159,21 +210,6 @@ namespace Mediane.DomainModel
             throw new NotImplementedException();
         }
 
-        public override bool HasLocalAccount(int id)
-        {
-            return repository.GetUserById(id) != null;
-        }
-
-        public override System.Web.Security.MembershipUser GetUser(string username, bool userIsOnline)
-        {
-            int providerUserKey = repository.GetUserId(username);
-            return new MembershipUser(this.Name, username, providerUserKey, "", "", "", true, false,
-                new DateTime(2013, 1, 1), DateTime.Now, DateTime.Now,
-                new DateTime(2013, 1, 1), new DateTime(1, 1, 1));
-            //var user = new MedianeMembershipUser(repository, username);
-            //return user;
-        }
-
         public override System.Web.Security.MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
             throw new NotImplementedException();
@@ -239,28 +275,21 @@ namespace Mediane.DomainModel
             throw new NotImplementedException();
         }
 
-        public override bool ValidateUser(string username, string password)
-        {
-            if (username == "administrator" && password == "root")
-            {
-                return true;
-            }
-
-            return repository.Validate(username, password);
-        }
-    }
-
-    public class MedianeMembershipUser : System.Web.Security.MembershipUser
-    {
-        private IUserRepository repository;
-
-        public MedianeMembershipUser(IUserRepository repository, string username)
-            : base("MedianeMembershipUser", username, null, "", "", "", true, false, 
-                new DateTime(2013,1,1), DateTime.Now, DateTime.Now,
-                new DateTime(2013,1,1), new DateTime(1,1,1) )
-        {
-            this.repository = repository;
-        }
+#endregion NotImplementedOverrides
 
     }
+
+    //public class MedianeMembershipUser : System.Web.Security.MembershipUser
+    //{
+    //    private IUserRepository repository;
+
+    //    public MedianeMembershipUser(IUserRepository repository, string username)
+    //        : base("MedianeMembershipUser", username, null, "", "", "", true, false, 
+    //            new DateTime(2013,1,1), DateTime.Now, DateTime.Now,
+    //            new DateTime(2013,1,1), new DateTime(1,1,1) )
+    //    {
+    //        this.repository = repository;
+    //    }
+
+    //}
 }

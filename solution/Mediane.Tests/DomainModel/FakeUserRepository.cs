@@ -35,14 +35,16 @@ namespace Mediane.Tests.DomainModel
             return user.Password == password;
         }
 
-        public void Create(string username, string password)
+        public int CreateLocal(string username, string password)
         {
             if (Users.ContainsKey(username))
             {
                 throw new MembershipCreateUserException();
             }
 
-            Users[username] = new User { Password = password, UserId = NextUserId() };
+            int userId = NextUserId();
+            Users[username] = new User { Password = password, UserId = userId };
+            return userId;
         }
 
         public int GetUserId(string username)
@@ -68,5 +70,15 @@ namespace Mediane.Tests.DomainModel
             return null;
         }
 
+
+        public bool UserExist(string username)
+        {
+            return GetUserId(username) > 0;
+        }
+
+        public int CreateUser(string username)
+        {
+            return CreateLocal(username, "");
+        }
     }
 }
