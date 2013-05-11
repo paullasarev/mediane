@@ -11,134 +11,219 @@ using System.Web;
 using System.Text;
 using System.Security.Principal;
 using Microsoft.Web.WebPages.OAuth;
+using Moq;
+using System.Web.Routing;
+using System.Collections.Generic;
+using DotNetOpenAuth.AspNet;
 
 namespace Mediane.Tests.Controllers
 {
     [TestClass]
     public class AccountControllerTest
     {
-        const string DbName = "TestDb.sdf";
-        const string ConnectionStringName = "MedianeDb";
-        static string CurrentDirectory = Directory.GetCurrentDirectory();
+        private AccountController Controller { get; set; }
+        private RouteCollection Routes { get; set; }
+        private Mock<IWebSecurity> WebSecurity { get; set; }
+        private Mock<IOAuthWebSecurity> OAuthWebSecurity { get; set; }
+        private Mock<HttpResponseBase> Response { get; set; }
+        private Mock<HttpRequestBase> Request { get; set; }
+        private Mock<HttpContextBase> Context { get; set; }
+        private Mock<ControllerContext> ControllerContext { get; set; }
+        private Mock<IPrincipal> User { get; set; }
+        private Mock<IIdentity> Identity { get; set; }
+        private Mock<IUserRepository> TheUserRepository { get; set; }
 
-        static string DbFullFileName;
-        static MedianeSql Sql;
-        static InitDb InitDbInstance;
-        static IUserRepository userRepository;
+        string returnUrl = "/Home/Index";
 
-        public static void EnableConnectionStringConfigurationEditing()
+        string providerName = "facebook";
+        string providerUserId = "Id";
+        string providerDisplayName = "Facebook";
+
+        string userName = "user";
+        int userId = 100;
+
+        public AccountControllerTest()
         {
-            typeof(ConfigurationElementCollection)
-                .GetField("bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic)
-                .SetValue(ConfigurationManager.ConnectionStrings, false);
-        }
+            WebSecurity = new Mock<IWebSecurity>(MockBehavior.Strict);
+            OAuthWebSecurity = new Mock<IOAuthWebSecurity>(MockBehavior.Strict);
 
-        [ClassInitialize]
-        public static void Init(TestContext context)
-        {
-            Sql = new MedianeSql();
-            DbFullFileName = Path.Combine(CurrentDirectory, DbName);
-            File.Delete(DbFullFileName);
+            Identity = new Mock<IIdentity>(MockBehavior.Strict);
+            Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            InitDbInstance = new InitDb(DbName, Sql, DbFullFileName);
-            InitDbInstance.CreateDbIfNotExist();
+            User = new Mock<IPrincipal>(MockBehavior.Strict);
+            User.SetupGet(u => u.Identity).Returns(Identity.Object);
 
-            EnableConnectionStringConfigurationEditing();
+            Routes = new RouteCollection();
+            RouteConfig.RegisterRoutes(Routes);
 
-            ConfigurationManager.ConnectionStrings.Clear();
-            ConfigurationManager.ConnectionStrings.Add(
-                new ConnectionStringSettings(
-                    ConnectionStringName,
-                    InitDbInstance.GetConnectionString(),
-                    InitDbInstance.GetProviderName()
-                )
-            );
+            Request = new Mock<HttpRequestBase>(MockBehavior.Strict);
+            Request.SetupGet(x => x.ApplicationPath).Returns("/");
+            Request.SetupGet(x => x.Url).Returns(new Uri("http://localhost/a", UriKind.Absolute));
+            Request.SetupGet(x => x.ServerVariables).Returns(new System.Collections.Specialized.NameValueCollection());
 
-            RepositoryTable.Repositories.Clear();
-            userRepository = new UserRepository(
-                    InitDbInstance.GetConnectionString(),
-                    InitDbInstance.GetProviderName()
-                );
+            Response = new Mock<HttpResponseBase>(MockBehavior.Strict);
 
-            RepositoryTable.Repositories.Register<IUserRepository>(userRepository);
-        }
+            Context = new Mock<HttpContextBase>(MockBehavior.Strict);
+            Context.SetupGet(x => x.Request).Returns(Request.Object);
+            Context.SetupGet(x => x.Response).Returns(Response.Object);
+            Context.SetupGet(x => x.User).Returns(User.Object);
 
-        [ClassCleanup]
-        public static void Done()
-        {
-            RepositoryTable.Repositories.Clear();
+            TheUserRepository = new Mock<IUserRepository>(MockBehavior.Strict);
+
+            Controller = new AccountController(WebSecurity.Object, OAuthWebSecurity.Object, TheUserRepository.Object);
+            var routeData = new RouteData();
+            Controller.ControllerContext = new ControllerContext(Context.Object, routeData, Controller);
+            Controller.Url = new UrlHelper(new RequestContext(Context.Object, routeData), Routes);
+
         }
 
         [TestMethod]
-        public void ExternalLoginConfirmationShouldCreateOAuthUser()
+        public void Login_UserCanLogin()
         {
-            string username = "user1";
-            string url = "http://localhost:56773/Account/Manage";
-            string providerName = "Facebook";
-            string providerUserId = "user1@gmail.com";
-
-            var stringBuilder = new StringBuilder();
-            var memoryWriter = new StringWriter(stringBuilder);
-            var fakeResponse = new HttpResponse(memoryWriter);
-
-            HttpRequest fakeRequest = new HttpRequest("Global.aspx", url, "");
-
-            //var identity = new GenericIdentity(username);
-            var identity = new NoAuthIdentity(username);
-            string[] roles = { /*"Administrator"*/ };
-            var principal = new GenericPrincipal(identity, roles);
-
-            HttpContext httpContext = new HttpContext(fakeRequest, fakeResponse) {
-                User = principal
+            string password = "password";
+            var model = new LoginModel
+            {
+                UserName = userName,
+                Password = password
             };
 
-            var controllerContext = new ControllerContext() {
-                HttpContext = new HttpContextWrapper(httpContext),
+            WebSecurity.Setup(s => s.Login(userName, password, false)).Returns(true);
+
+            var result = Controller.Login(model, returnUrl) as RedirectResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(returnUrl, result.Url);
+        }
+
+        [TestMethod]
+        public void Disassociate_UserCanRemoveOAuthProvider()
+        {
+            var accounts = new List<OAuthAccount> {
+                new OAuthAccount(providerName, providerUserId)
             };
-            
-            var controller = new AccountController() {
-                ControllerContext = controllerContext,
+
+            OAuthWebSecurity.Setup(o => o.GetUserName(providerName, providerUserId)).Returns(userName);
+            Identity.SetupGet(i => i.Name).Returns(userName);
+            WebSecurity.Setup(s => s.GetUserId(userName)).Returns(userId);
+            OAuthWebSecurity.Setup(o => o.HasLocalAccount(userId)).Returns(true);
+            OAuthWebSecurity.Setup(o => o.GetAccountsFromUserName(userName)).Returns(accounts);
+            OAuthWebSecurity.Setup(o => o.DeleteAccount(providerName, providerUserId)).Returns(true);
+
+            var result = Controller.Disassociate(providerName, providerUserId) as RedirectToRouteResult;
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.RouteValues["Message"]);
+
+            OAuthWebSecurity.Verify(o => o.DeleteAccount(providerName, providerUserId), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void ExternalLoginConfirmation_NotAuthentecated_Should_StoreOAuthAndRedirectToReturnUrl()
+        {
+            var model = new RegisterExternalLoginModel
+            {
+                UserName = userName,
+                ExternalLoginData = "data"
             };
 
-            string externalLoginData = OAuthWebSecurity.SerializeProviderUserId(providerName, providerUserId);
+            Identity.SetupGet(i => i.IsAuthenticated).Returns(false);
+            OAuthWebSecurity.Setup(o => o.TryDeserializeProviderUserId(model.ExternalLoginData, out  providerName, out providerUserId)).Returns(true);
 
-            var model = new RegisterExternalLoginModel() {
-                UserName = username,
-                ExternalLoginData = externalLoginData
-            };
+            TheUserRepository.Setup(o => o.UserExist(userName)).Returns(false);
+            TheUserRepository.Setup(o => o.CreateUser(userName)).Returns(userId);
+
+            OAuthWebSecurity.Setup(o => o.CreateOrUpdateAccount(providerName, providerUserId, userName));
+            OAuthWebSecurity.Setup(o => o.Login(providerName, providerUserId, false)).Returns(true);
 
 
-            Assert.IsFalse(userRepository.UserExist(username));
+            var result = Controller.ExternalLoginConfirmation(model, returnUrl) as RedirectResult;
 
-            controller.ExternalLoginConfirmation(model, url);
-
-            Assert.IsTrue(userRepository.UserExist(username));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(returnUrl, result.Url);
 
         }
 
-        class NoAuthIdentity : IIdentity
+        [TestMethod]
+        public void ExternalLoginConfirmation_Authentecated_Should_RedirectToManageAction()
         {
-            string username;
-
-            public NoAuthIdentity(string username)
+            var model = new RegisterExternalLoginModel
             {
-                this.username = username;
-            }
+                UserName = userName,
+                ExternalLoginData = "data"
+            };
 
-            public string AuthenticationType
-            {
-                get { return "Basic"; }
-            }
+            Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            public bool IsAuthenticated
-            {
-                get { return false; }
-            }
+            var result = Controller.ExternalLoginConfirmation(model, returnUrl) as RedirectToRouteResult;
 
-            public string Name
-            {
-                get { return username; }
-            }
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Manage", result.RouteValues["action"]);
         }
+
+        [TestMethod]
+        public void ExternalLoginConfirmation_InvalidModelState_Should_AddModelError()
+        {
+            var model = new RegisterExternalLoginModel
+            {
+                UserName = userName,
+                ExternalLoginData = "data"
+            };
+
+            Identity.SetupGet(i => i.IsAuthenticated).Returns(false);
+            OAuthWebSecurity.Setup(o => o.TryDeserializeProviderUserId(model.ExternalLoginData, out  providerName, out providerUserId)).Returns(true);
+
+            Controller.ModelState.AddModelError("TestError", "test error");
+
+            OAuthWebSecurity.Setup(o => o.GetOAuthClientData(providerName)).Returns(AuthData(providerDisplayName));
+
+            var result = Controller.ExternalLoginConfirmation(model, returnUrl) as ViewResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("", result.ViewName);
+            Assert.AreEqual(returnUrl, result.ViewBag.ReturnUrl);
+            Assert.AreEqual(providerDisplayName, result.ViewBag.ProviderDisplayName);
+
+            Assert.IsTrue(ModelStateHaveError(Controller, "TestError"));
+            Assert.IsFalse(ModelStateHaveError(Controller, "UserName"));
+        }
+
+        [TestMethod]
+        public void ExternalLoginConfirmation_NotAuthenticatedNoUser_Should_AddError()
+        {
+            var model = new RegisterExternalLoginModel
+            {
+                UserName = userName,
+                ExternalLoginData = "data"
+            };
+
+            Identity.SetupGet(i => i.IsAuthenticated).Returns(false);
+            OAuthWebSecurity.Setup(o => o.TryDeserializeProviderUserId(model.ExternalLoginData, out  providerName, out providerUserId)).Returns(true);
+
+            TheUserRepository.Setup(o => o.UserExist(userName)).Returns(true);
+
+            OAuthWebSecurity.Setup(o => o.GetOAuthClientData(providerName)).Returns(AuthData(providerDisplayName));
+
+            var result = Controller.ExternalLoginConfirmation(model, returnUrl) as ViewResult;
+
+            Assert.IsNotNull(result);
+
+            Assert.IsFalse(Controller.ModelState.IsValid);
+            Assert.IsTrue(ModelStateHaveError(Controller, "UserName"));
+        }
+
+
+        private static bool ModelStateHaveError(Controller controller, string key)
+        {
+            return controller.ModelState.ContainsKey(key) 
+                && controller.ModelState[key].Errors.Count > 0;
+        }
+
+        private static AuthenticationClientData AuthData(string providerDisplayName)
+        {
+            return new AuthenticationClientData(
+                            new Mock<IAuthenticationClient>(MockBehavior.Default).Object,
+                            providerDisplayName, new Dictionary<string, object>());
+        }
+
     }
 }

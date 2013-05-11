@@ -210,6 +210,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IWebSecurity.cs" />
     <Compile Include="DomainModel\ContentModelRepository.cs" />
     <Compile Include="DomainModel\IContentModelRepository.cs" />
     <Compile Include="DomainModel\InitDb.cs" />

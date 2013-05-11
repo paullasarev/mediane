@@ -11,14 +11,32 @@ using WebMatrix.WebData;
 using Mediane.Filters;
 using Mediane.Models;
 using Mediane.DomainModel;
+using System.Security.Principal;
 
 namespace Mediane.Controllers
 {
+
     [Authorize]
-    //[InitializeSimpleMembership]
     public class AccountController : Controller
     {
-        //
+        private IUserRepository TheUserRepository;
+        private IWebSecurity WebSecurity;
+        private IOAuthWebSecurity OAuthWebSecurity;
+
+        public AccountController()
+        {
+            this.WebSecurity = new WebSecurityWrapper();
+            this.OAuthWebSecurity = new OAuthWebSecurityWrapper();
+            this.TheUserRepository = RepositoryTable.Repositories.Locate<IUserRepository>();
+        }
+
+        public AccountController(IWebSecurity webSecurity, IOAuthWebSecurity iOAuthWebSecurity, IUserRepository userRepository)
+        {
+            this.WebSecurity = webSecurity;
+            this.OAuthWebSecurity = iOAuthWebSecurity;
+            this.TheUserRepository = userRepository;
+        }
+
         // GET: /Account/Login
 
         [AllowAnonymous]
@@ -210,7 +228,7 @@ namespace Mediane.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            return new ExternalLoginResult(provider, Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
+            return new ExternalLoginResult(OAuthWebSecurity, provider, Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
         }
 
         //
@@ -264,31 +282,9 @@ namespace Mediane.Controllers
 
             if (ModelState.IsValid)
             {
-                // Insert a new user into the database
-                //using (UsersContext db = new UsersContext())
-                //{
-                //    UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
-                //    // Check if user already exists
-                //    if (user == null)
-                //    {
-                //        // Insert name into the profile table
-                //        db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
-                //        db.SaveChanges();
-
-                //        OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-                //        OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
-
-                //        return RedirectToLocal(returnUrl);
-                //    }
-                //    else
-                //    {
-                //        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
-                //    }
-                //}
-                var userRepository = RepositoryTable.Repositories.Locate<IUserRepository>();
-                if (!userRepository.UserExist(model.UserName))
+                if (!TheUserRepository.UserExist(model.UserName))
                 {
-                    userRepository.CreateUser(model.UserName);
+                    TheUserRepository.CreateUser(model.UserName);
                     OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
                     OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
 
@@ -365,10 +361,13 @@ namespace Mediane.Controllers
 
         internal class ExternalLoginResult : ActionResult
         {
-            public ExternalLoginResult(string provider, string returnUrl)
+            private IOAuthWebSecurity OAuthWebSecurity;
+
+            public ExternalLoginResult(IOAuthWebSecurity oAuthWebSecurity, string provider, string returnUrl)
             {
                 Provider = provider;
                 ReturnUrl = returnUrl;
+                OAuthWebSecurity = oAuthWebSecurity;
             }
 
             public string Provider { get; private set; }
