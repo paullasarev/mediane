@@ -477,7 +477,7 @@ input, textarea {
 
 textarea {
     font-family: inherit;
-    width: 500px;
+    width: 98%;
 }
 
     input:focus, textarea:focus {
@@ -503,6 +503,39 @@ textarea {
         width: auto;
         height: 30px;
     }
+
+        input[type="submit"].thin {
+            font-size: 1em;
+            height: 19px;
+            padding-bottom: 1px;
+            padding-top: 0px;
+            padding-left: 4px;
+            padding-right: 4px;
+            /*border-radius: 8px;*/
+            margin-left: -6px;
+            margin-right: 10px;
+        }
+
+.edit-header {
+    display: block;
+    position: relative;
+    height: 25px;
+}
+
+.edit-title {
+    display: inline-block;
+    float: left;
+    position: absolute;
+    line-height: 0px;
+}
+
+.edit-property {
+    display: inline-block;
+    float: right;
+    position: absolute;
+    /*top: -20px;*/
+    right: 0px;
+}
 
 input[type="text"].search {
     width: 500px;

@@ -200,8 +200,11 @@
     <Compile Include="DomainModel\InitDbTest.cs" />
     <Compile Include="DomainModel\MedianeMembershipProviderTest.cs" />
     <Compile Include="DomainModel\UserRepositoryTest.cs" />
+    <Compile Include="Functional\EditPage.cs" />
+    <Compile Include="Functional\EditPageTest.cs" />
     <Compile Include="Functional\HomePage.cs" />
     <Compile Include="Functional\HomePageTest.cs" />
+    <Compile Include="Functional\TestEnvironment.cs" />
     <Compile Include="Models\ContentModelTest.cs" />
     <Compile Include="Models\FakeContentModelRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,41 +4,28 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using Mediane.DomainModel;
 using System.IO;
+using System.Web;
 
 namespace Mediane.Tests.Functional
 {
     [TestClass]
     public class HomePageTest
     {
+        static string PageId;
+        static TestEnvironment environment = TestEnvironment.Environment;
         static IWebDriver Driver;
-        const string BaseUrl = "http://localhost:56773/";
-        const string MainPageId = "Main_Page";
-        const string DbName = "MedianeDb.sdf";
 
         [ClassInitialize()]
         public static void Initialize(TestContext testContext)
         {
-            var solutionFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)));
-
-            string dbFileName = Path.Combine(solutionFolder, "Mediane", "App_Data", DbName);
-            File.Delete(dbFileName);
-            var initDb = new InitDb(DbName, new MedianeSql(), dbFileName);
-            initDb.CreateDbIfNotExist();
-
-            Driver = new FirefoxDriver();
-            Driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-        }
-
-        [ClassCleanup()]
-        public static void Cleanup()
-        {
-            Driver.Quit();
+            Driver = environment.WebDriver;
+            PageId = environment.NextPageId();
         }
 
         [TestMethod]
         public void HomePageShouldContainEditButton()
         {
-            var page = new HomePage(Driver, BaseUrl, MainPageId);
+            var page = new HomePage(Driver, environment.BaseUrl, PageId);
 
             IWebElement editButton = page.GetEditButton();
 
@@ -48,12 +35,12 @@ namespace Mediane.Tests.Functional
         [TestMethod]
         public void ShouldOpenEditMainPage()
         {
-            var page = new HomePage(Driver, BaseUrl, MainPageId);
+            var page = new HomePage(Driver, environment.BaseUrl, PageId);
 
             IWebElement editButton = page.GetEditButton();
             editButton.Click();
 
-            Assert.AreEqual(BaseUrl + "Home/Edit/Main_Page", Driver.Url);
+            Assert.AreEqual(environment.BaseUrl + "Home/Edit/" + HttpUtility.UrlPathEncode(PageId), Driver.Url);
         }
     }
 }

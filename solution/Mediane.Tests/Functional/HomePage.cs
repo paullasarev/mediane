@@ -10,20 +10,28 @@ namespace Mediane.Tests.Functional
     {
         private IWebDriver Driver;
         private string BaseUrl;
-        private string Id;
+        private string PageId;
 
         public HomePage(IWebDriver driver, string baseUrl, string id)
         {
             Driver = driver;
             BaseUrl = baseUrl;
-            Id = HttpUtility.UrlEncode(id);
+            PageId = id;
 
-            Driver.Navigate().GoToUrl(BaseUrl + "Home/Index/" + Id);
+            Driver.Navigate().GoToUrl(BaseUrl + "Home/Index/" + PageId);
+        }
+
+        public string EncodedId
+        {
+            get
+            {
+                return HttpUtility.UrlPathEncode(PageId);
+            }
         }
 
         public IWebElement GetEditButton()
         {
-            IWebElement query = Driver.FindElement(By.CssSelector(".toolbox li a[href='/Home/Edit/"+ Id + "']"));
+            IWebElement query = Driver.FindElement(By.CssSelector(".toolbox li a[href='/Home/Edit/" + EncodedId + "']"));
             return query;
         }
     }

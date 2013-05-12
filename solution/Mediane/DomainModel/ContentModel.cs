@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Mediane.DomainModel
 {
@@ -52,6 +53,18 @@ namespace Mediane.DomainModel
         }
 
         public bool IsNew { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableTypes
+        {
+            get
+            {
+                var types = new List<SelectListItem>();
+                types.Add(new SelectListItem { Text = "Page", Value = "Page" });
+                types.Add(new SelectListItem { Text = "Category", Value = "Category" });
+                return types;
+            }
+        }
+
     }
 
     class MediaWikiParser
@@ -60,7 +73,7 @@ namespace Mediane.DomainModel
         private string Content;
         private StringBuilder Builder = new StringBuilder();
         int position = 0;
-        
+
         public string Result { get { return Builder.ToString(); } }
 
         public MediaWikiParser(string content)
@@ -172,7 +185,7 @@ namespace Mediane.DomainModel
 
                         Word.Append(ch);
                         break;
-                    
+
                     case LexStateType.NewLine:
                         switch (ch)
                         {
