@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,26 +13,72 @@ namespace Mediane.Tests.Functional
 {
     class TestEnvironment
     {
-        public readonly string BaseUrl = "http://localhost:56773/";
+        const int iisPort = 2020;
+        private readonly string _applicationName = "Mediane";
+        private Process _iisProcess;
+
+        public readonly string BaseUrl = "http://localhost:" + iisPort.ToString() + "/";
+            // "http://localhost:56773/";
+
         public readonly string DbName = "MedianeDb.sdf";
+        static TestEnvironment TestEnvironmentInstance;
+        //string SolutionFolder { get; set; }
+        //string DbFileName { get; set; }
+        public IWebDriver WebDriver { get; private set; }
 
         public TestEnvironment()
         {
-            SolutionFolder = Path.GetDirectoryName(Path.GetDirectoryName(
-                    Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)));
-            DbFileName = Path.Combine(SolutionFolder, "Mediane", "App_Data", DbName);
+            string solutionFolder = GetSolutionFolder();
+            string dbFileName = Path.Combine(solutionFolder, "Mediane", "App_Data", DbName);
+            InitDb(dbFileName);
+            
+            StartIIS();
 
-            InitDb();
             WebDriver = CreateWebDriver();
         }
 
-        string SolutionFolder { get; set; }
-        string DbFileName { get; set; }
-
-        public void InitDb()
+        ~TestEnvironment()
         {
-            File.Delete(DbFileName);
-            var initDb = new InitDb(DbName, new MedianeSql(), DbFileName);
+            WebDriver.Quit();
+            StopIIS();
+        }
+
+
+        private void StartIIS() 
+        {
+            var applicationPath = GetApplicationPath(_applicationName);
+            var programFiles = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles);
+
+            _iisProcess = new Process();
+            _iisProcess.StartInfo.FileName = programFiles + "\\IIS Express\\iisexpress.exe";
+            _iisProcess.StartInfo.Arguments = string.Format("/path:\"{0}\" /port:{1}", applicationPath, iisPort);
+            _iisProcess.Start();
+        }
+
+        private void StopIIS()
+        {
+            if (_iisProcess.HasExited == false)
+            {
+                _iisProcess.Kill();
+            }
+        }
+
+        private string GetApplicationPath(string applicationName)
+        {
+            return Path.Combine(GetSolutionFolder(), applicationName);
+        }
+
+        private static string GetSolutionFolder()
+        {
+            var solutionFolder = Path.GetDirectoryName(Path.GetDirectoryName(
+                Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)));
+            return solutionFolder;
+        }
+
+        public void InitDb(string dbFileName)
+        {
+            File.Delete(dbFileName);
+            var initDb = new InitDb(DbName, new MedianeSql(), dbFileName);
             initDb.CreateDbIfNotExist();
         }
 
@@ -43,9 +90,6 @@ namespace Mediane.Tests.Functional
             return webDriver;
         }
 
-        public IWebDriver WebDriver { get; private set; }
-
-        static TestEnvironment TestEnvironmentInstance;
         public static TestEnvironment Environment
         { 
             get
@@ -57,11 +101,6 @@ namespace Mediane.Tests.Functional
 
                 return TestEnvironmentInstance;
             }
-        }
-
-        ~TestEnvironment()
-        {
-           WebDriver.Quit();
         }
 
         int CurrentId = 1;

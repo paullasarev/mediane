@@ -121,5 +121,12 @@ namespace RazorMachineFakes
             return new LiteralString("<li><a>View</a></li>");
         }
 
+
+        public static LiteralString DropDownList(string name,
+            IEnumerable<SelectListItem> selectList,
+            string optionLabel = "")
+        {
+            return new LiteralString("<li><a>DropDownList: " + name + "</a></li>");
+        }
     }
 }

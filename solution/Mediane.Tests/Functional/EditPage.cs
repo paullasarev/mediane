@@ -37,13 +37,13 @@ namespace Mediane.Tests.Functional
 
         internal IWebElement GetTypeField()
         {
-            IWebElement element = Driver.FindElement(By.CssSelector("form#PageProperty select#ok"));
+            IWebElement element = Driver.FindElement(By.CssSelector("form#PageProperty select#Type"));
             return element;
         }
 
         internal IWebElement GetTypeButton()
         {
-            IWebElement element = Driver.FindElement(By.CssSelector("form#PageProperty input#ok"));
+            IWebElement element = Driver.FindElement(By.CssSelector("form#PageProperty input#typeOk"));
             return element;
         }
     }
